@@ -1,12 +1,12 @@
-import { isCanonicalSha256NiUri } from "@red-cup-engineering/semantic-content-identify-service";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/semantic-content-identify-service";
+import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 
 const SHA = /^sha256:[a-f0-9]{64}$/u;
 const PROVIDER = "urn:ame:codex-session-activity-provider:tool-observation";
 
 function freeze(value) { if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value; for (const child of Object.values(value)) freeze(child); return Object.freeze(value); }
 function identify(value, objectKind = `modeled-union-dimension.${value?.type ?? "material"}`) { return identifyJsonSemanticContent({ objectKind, value, witnessRoot: EMPTY_WITNESS_ROOT }).token; }
-function exactNi(value, label) { if (!isCanonicalSha256NiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`); return value; }
+function exactNi(value, label) { if (!isNiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`); return value; }
 function timestamp(value, label) { if (!Number.isFinite(Date.parse(value))) throw new TypeError(`${label} must be an exact timestamp`); return value; }
 
 function admit(admission, index) {
