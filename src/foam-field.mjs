@@ -6,8 +6,8 @@ import {
   joinKnowledgeValue,
   knowledgeJoinClosure,
 } from "@lenticule-science/articulating/predicating/positing";
-import { isCanonicalSha256NiUri } from "@red-cup-engineering/semantic-content-identify-service";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/semantic-content-identify-service";
+import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 
 const PHASE = Object.freeze({ absurd: "void", potential: "positive-bulk", active: "negative-bulk", stable: "interface" });
 const frozenProjectionCache = new Map();
@@ -27,7 +27,7 @@ function required(value, label) {
   return value;
 }
 function exactNi(value, label) {
-  if (!isCanonicalSha256NiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`);
+  if (!isNiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`);
   return value;
 }
 

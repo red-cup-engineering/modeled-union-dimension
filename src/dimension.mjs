@@ -3,8 +3,8 @@ import {
   chargeValueName,
   joinKnowledgeValue,
 } from "@lenticule-science/articulating/predicating/positing";
-import { isCanonicalSha256NiUri } from "@red-cup-engineering/semantic-content-identify-service";
-import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/semantic-content-identify-service";
+import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 import { projectTerritoryFoam } from "./foam-field.mjs";
 import { projectLSpace } from "./l-space.mjs";
 import { projectWorkCirculation } from "./work-circulation.mjs";
@@ -26,7 +26,7 @@ function required(value, label) {
   return value;
 }
 function exactNi(value, label) {
-  if (!isCanonicalSha256NiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`);
+  if (!isNiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`);
   return value;
 }
 function same(left, right) { return String(left).toLowerCase() === String(right).toLowerCase(); }
@@ -177,19 +177,19 @@ function authorityPair(action, authorityReceipts) {
   if (!Array.isArray(ucans) || !Array.isArray(bindings)) throw new TypeError("authorityReceipts must contain ucan and controllerBindings arrays");
   const ability = OPERATION_ABILITY[action.operation];
   const ucan = ucans.find((receipt) => receipt?.type === "UcanInvocationVerificationReceipt" && receipt.version === 1
-    && receipt.disposition === "authorized" && receipt.revocationStatus === "active" && receipt.capability?.can === ability && isCanonicalSha256NiUri(receipt.id));
+    && receipt.disposition === "authorized" && receipt.revocationStatus === "active" && receipt.capability?.can === ability && isNiUri(receipt.id));
   if (!ucan) return null;
   const binding = bindings.find((receipt) => receipt?.type === "EnterpriseAccountControllerBindingReceipt" && receipt.version === 1
-    && receipt.disposition === "bound" && receipt.protocol === "ERC-1271" && isCanonicalSha256NiUri(receipt.id)
+    && receipt.disposition === "bound" && receipt.protocol === "ERC-1271" && isNiUri(receipt.id)
     && receipt.controller === ucan.controller && receipt.actor === ucan.actor && receipt.invocationCid === ucan.invocationCid
     && receipt.delegationCid === ucan.delegationCid && receipt.capabilityNi === ucan.capabilityNi
-    && isCanonicalSha256NiUri(ucan.capabilityNi) && same(receipt.resource, ucan.capability?.with));
+    && isNiUri(ucan.capabilityNi) && same(receipt.resource, ucan.capability?.with));
   return binding ? freeze({ ucanInvocationVerificationReceiptNi: ucan.id, enterpriseAccountControllerBindingReceiptNi: binding.id }) : null;
 }
 
 function admitMissionLaw(value) {
   if (value === null) return null;
-  if (value?.type !== "ModeledUnionMissionLawLocus" || value.locus !== "law:semiotic-foam-one-machine" || value.language !== "rmn/v2" || !isCanonicalSha256NiUri(value.carrierNi)) {
+  if (value?.type !== "ModeledUnionMissionLawLocus" || value.locus !== "law:semiotic-foam-one-machine" || value.language !== "rmn/v2" || !isNiUri(value.carrierNi)) {
     throw new TypeError("missionLaw must be the canonical RMN v2 Semiotic Foam One Machine law locus");
   }
   return freeze({ type: value.type, locus: value.locus, carrierNi: value.carrierNi, language: value.language });
