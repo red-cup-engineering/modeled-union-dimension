@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension } from "../src/index.mjs";
 import { induceCapabilityRepairDemand } from "../../../src/semiotic-exchange-demand-induction.mjs";
-import { makeNiUri } from "@red-cup-engineering/ni-uri-services-section";
+import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 
 const ni = (value) => makeNiUri(Buffer.from(value, "utf8"));
 const sha = (label) => `sha256:${createHash("sha256").update(label).digest("hex")}`;

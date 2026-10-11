@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension, projectTerritoryFoam } from "../src/index.mjs";
-import { makeNiUri } from "@red-cup-engineering/ni-uri-services-section";
+import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 
 const ni = (value) => makeNiUri(Buffer.from(value, "utf8"));
 const packageName = "@red-cup-engineering/example-cell";
