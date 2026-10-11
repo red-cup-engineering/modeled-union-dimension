@@ -8,7 +8,7 @@ import {
 } from "../../../src/semiotic-exchange-demand-induction.mjs";
 import { induceCapabilityRepairDemand } from "../../../src/semiotic-exchange-demand-induction.mjs";
 import { scanTemporalFailureMarks } from "../../../../../../software-development-services-section/services/typed-resource-catalog-service/src/temporal-failure-normalization.mjs";
-import { makeNiUri } from "@red-cup-engineering/ni-uri-services-section";
+import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 
 const exchange = "0x98bBC65824962b61dF876A47B5779C4EcBBD4939";
 const controller = "0x08E4B3bc9ef76b403879C0eC372d1Fd146E3a07B";

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/semantic-content-identify-service";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension, createNotebookLmLibraryQueryActuator, NOTEBOOK_PROVIDER } from "../src/index.mjs";
-import { makeNiUri } from "@red-cup-engineering/ni-uri-services-section";
+import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 
 const ni = (value) => makeNiUri(Buffer.from(value, "utf8"));
 const identify = (value) => identifyJsonSemanticContent({ objectKind: `modeled-union-dimension.${value?.type ?? "material"}`, value, witnessRoot: EMPTY_WITNESS_ROOT }).token;

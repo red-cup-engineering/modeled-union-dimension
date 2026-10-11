@@ -18,7 +18,9 @@
   },
   "dependencies": {
     "@lenticule-science/articulating": "0.2.0",
-    "@red-cup-engineering/ni-uri-services-section": "0.1.1",
     "@red-cup-engineering/semantic-content-identify-service": "workspace:*"
+  },
+  "devDependencies": {
+    "@red-cup-engineering/uri-services-section": "workspace:*"
   }
 }
