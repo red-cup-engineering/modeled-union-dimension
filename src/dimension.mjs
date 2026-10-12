@@ -1,8 +1,4 @@
-import {
-  chargeValue,
-  chargeValueName,
-  joinKnowledgeValue,
-} from "@lenticule-science/articulating/predicating/positing";
+import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
 import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 import { projectTerritoryFoam } from "./foam-field.mjs";
@@ -87,15 +83,15 @@ function admitFederationHistory(values) {
   }));
 }
 function support(locus, federationHistory) {
-  let value = chargeValue("absurd"), positive = false, negative = false;
+  let positive = false, negative = false;
   for (const standing of federationHistory) {
     if (standing.object?.type !== "SemioticSupportClaim") continue;
     const claim = standing.object;
     if (!claim || typeof claim !== "object" || !same(claim.locus, locus)) continue;
-    if (standing.support.positive) { positive = true; value = joinKnowledgeValue(value, chargeValue("potential")); }
-    if (standing.support.negative) { negative = true; value = joinKnowledgeValue(value, chargeValue("active")); }
+    if (standing.support.positive) positive = true;
+    if (standing.support.negative) negative = true;
   }
-  return freeze({ positive, negative, charge: chargeValueName(value) });
+  return freeze({ positive, negative, charge: readingOfSides("knowledge", positive, negative) });
 }
 function relation(type, from, to, event) { return freeze({ type, from, to, chainPosition: event.chainPosition, carrierNi: event.carrierNi }); }
 function settlementEvidence(federationHistory) {

@@ -1,11 +1,5 @@
-import {
-  chargeValue,
-  chargeValueName,
-  closureMonadReceipt,
-  fixedSet,
-  joinKnowledgeValue,
-  knowledgeJoinClosure,
-} from "@lenticule-science/articulating/predicating/positing";
+import { fixedSet, readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
+import { closureMonadReceipt, knowledgeJoinClosure } from "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber";
 import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 
@@ -106,9 +100,8 @@ function admitObserverFamily(value, locusSet) {
 }
 
 function exactFour(commitments) {
-  let value = chargeValue("absurd");
-  for (const commitment of commitments) value = joinKnowledgeValue(value, chargeValue(commitment.polarity === "positive" ? "potential" : "active"));
-  const charge = chargeValueName(value);
+  // Opposition is witnessed support at one admitted locus, never parse alternatives.
+  const charge = readingOfSides("knowledge", commitments.some(({ polarity }) => polarity === "positive"), commitments.some(({ polarity }) => polarity === "negative"));
   return freeze({
     positiveEvidence: commitments.filter(({ polarity }) => polarity === "positive").map(({ assertionNi, witnessNis }) => ({ assertionNi, witnessNis })),
     negativeEvidence: commitments.filter(({ polarity }) => polarity === "negative").map(({ assertionNi, witnessNis }) => ({ assertionNi, witnessNis })),
@@ -130,7 +123,7 @@ function closureEvidence(four) {
     laws: { inflationary: receipt.settleStepInflationary, settlesByThree: receipt.settleStepSettlesByThree, noPeriodicOrbits: receipt.noPeriodicOrbits, multiplicationIdempotent: receipt.multiplicationIdempotent },
     proofAuthority: {
       lean: ["Obsmetrologia.Valuation.lfp_is_settled", "Obsmetrologia.Valuation.lfp_reached_by_three", "Obsmetrologia.four_regime_dichotomy"],
-      runtime: "@lenticule-science/articulating closureMonadReceipt",
+      runtime: "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber closureMonadReceipt",
     },
   });
   const evidence = freeze({ ...body, id: identify(body) });
@@ -141,14 +134,14 @@ function closureEvidence(four) {
 /** Project the corpus FOAM field equation over an admitted codebase territory. */
 export function projectTerritoryFoam({ territoryAdmission, observerFamily } = {}) {
   const { admission, territory } = admitTerritory(territoryAdmission);
-  if (Object.isFrozen(observerFamily)) {
-    const prior = frozenProjectionCache.get(admission.id)?.get(observerFamily);
-    if (prior !== undefined) return prior;
-  }
   const loci = territoryLoci(admission, territory);
   const locusSet = new Set(loci.map(({ locus }) => locus));
-  const relations = territoryRelations(admission, territory, locusSet);
   const family = admitObserverFamily(observerFamily, locusSet);
+  if (Object.isFrozen(observerFamily)) {
+    const prior = frozenProjectionCache.get(admission.id)?.get(observerFamily);
+    if (prior?.observerFamilyNi === family.id) return prior.projection;
+  }
+  const relations = territoryRelations(admission, territory, locusSet);
   // The observer family is admitted in canonical actor/assertion order above.  Index
   // its commitments once: `filter`ing the whole family at every locus made the
   // field equation quadratic while contributing no semantic information.
@@ -174,7 +167,7 @@ export function projectTerritoryFoam({ territoryAdmission, observerFamily } = {}
   const body = freeze({
     type: "ModeledUnionFoamFieldPresentation", version: 1, territoryAdmissionReceiptNi: admission.id, territoryReceiptNi: territory.id,
     observerFamily: family,
-    fourNegationSelfDualLocus: { values: fixedSet("negation").map(({ name }) => name), symbols: ["bottom", "top"], leanTheorem: "Obsmetrologia.Charge.negate_orbit", runtimeWitness: "@lenticule-science/articulating fixedSet(negation)" },
+    fourNegationSelfDualLocus: { values: fixedSet("negation"), symbols: ["bottom", "top"], leanTheorem: "Obsmetrologia.Charge.negate_orbit", runtimeWitness: "@red-cup-engineering/computer-data-engineering-services-section/four fixedSet(negation)" },
     sections, relations, census: freeze(counts),
     proofBoundary: {
       proved: "FOUR negation fixed points, finite closure/fixed-point laws, and the four-regime classifier",
@@ -190,7 +183,7 @@ export function projectTerritoryFoam({ territoryAdmission, observerFamily } = {}
       byObserver = new WeakMap();
       frozenProjectionCache.set(admission.id, byObserver);
     }
-    byObserver.set(observerFamily, projection);
+    byObserver.set(observerFamily, { observerFamilyNi: family.id, projection });
   }
   return projection;
 }

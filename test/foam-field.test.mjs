@@ -77,7 +77,7 @@ test("refuses unwitnessed, off-territory, and recursively nested commitments", (
 });
 
 test("reuses the exact section only for identical frozen carrier and observer coordinates", () => {
-  const makeFrozenFamily = () => Object.freeze({ type: "FoamObserverFamily", version: 1, observers: Object.freeze([Object.freeze({ actor: "urn:observer:runtime", commitments: Object.freeze([Object.freeze(commitment(locus, "positive", "runtime-positive"))]) })]) });
+  const makeFrozenFamily = () => Object.freeze({ type: "FoamObserverFamily", version: 1, observers: Object.freeze([Object.freeze({ actor: "urn:observer:runtime", commitments: Object.freeze([Object.freeze({ locus, polarity: "positive", witnessNis: Object.freeze([ni("runtime-positive")]) })]) })]) });
   const observerFamily = makeFrozenFamily();
   const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
   const second = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
@@ -91,4 +91,96 @@ test("the MUD presentation carries only the canonical mission law locus and cont
   const presentation = createModeledUnionDimension({ events: [], chainId: "eip155:5615610", exchange: "0x98bBC65824962b61dF876A47B5779C4EcBBD4939", missionLaw }).presentation();
   assert.deepEqual(presentation.missionLaw, missionLaw);
   assert.throws(() => createModeledUnionDimension({ events: [], chainId: "eip155:5615610", exchange: "0x98bBC65824962b61dF876A47B5779C4EcBBD4939", missionLaw: { ...missionLaw, carrierNi: "not-an-ni" } }), /missionLaw/u);
+});
+
+test("a shallow-frozen family is reprojected when nested commitment polarity changes", () => {
+  const observed = commitment(locus, "positive", "runtime-witness");
+  const observerFamily = Object.freeze(family([{ actor: "urn:observer:runtime", commitments: [observed] }]));
+  const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  observed.polarity = "negative";
+  const second = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  assert.notEqual(second, first);
+  assert.notEqual(second.observerFamily.id, first.observerFamily.id);
+  assert.equal(first.sections[0].phase, "positive-bulk");
+  assert.equal(second.sections[0].phase, "negative-bulk");
+  assert.equal(projectTerritoryFoam({ territoryAdmission: admission, observerFamily }), second);
+});
+
+test("a shallow-frozen family is reprojected when nested witness evidence changes", () => {
+  const observed = commitment(locus, "positive", "original-witness");
+  const observerFamily = Object.freeze(family([{ actor: "urn:observer:runtime", commitments: [observed] }]));
+  const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  observed.witnessNis[0] = ni("replacement-witness");
+  const second = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  assert.notEqual(second, first);
+  assert.notEqual(second.observerFamily.id, first.observerFamily.id);
+  assert.equal(first.sections[0].witnessPath.commitments[0].witnessNis[0], ni("original-witness"));
+  assert.equal(second.sections[0].witnessPath.commitments[0].witnessNis[0], ni("replacement-witness"));
+  assert.equal(second.sections[0].phase, "positive-bulk");
+});
+
+test("cached families still reject newly invalid or off-territory nested commitments", () => {
+  const observed = commitment(locus, "positive", "runtime-witness");
+  const commitments = [observed];
+  const observerFamily = Object.freeze(family([{ actor: "urn:observer:runtime", commitments }]));
+  const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  observed.polarity = "unknown";
+  assert.throws(() => projectTerritoryFoam({ territoryAdmission: admission, observerFamily }), /polarity must be positive or negative/u);
+
+  observed.polarity = "positive";
+  observed.witnessNis.length = 0;
+  assert.throws(() => projectTerritoryFoam({ territoryAdmission: admission, observerFamily }), /at least one witness ni/u);
+
+  observed.witnessNis.push(ni("runtime-witness"));
+  commitments.push(commitment("package:elsewhere", "negative", "off-territory-witness"));
+  assert.throws(() => projectTerritoryFoam({ territoryAdmission: admission, observerFamily }), /outside the admitted territory/u);
+
+  commitments.pop();
+  assert.equal(projectTerritoryFoam({ territoryAdmission: admission, observerFamily }), first);
+});
+
+test("a frozen accessor family is compared by its currently admitted evidence", () => {
+  let observers = [{ actor: "urn:observer:runtime", commitments: [commitment(locus, "positive", "runtime-positive")] }];
+  const observerFamily = Object.freeze({ type: "FoamObserverFamily", version: 1, get observers() { return observers; } });
+  const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  observers = [{ actor: "urn:observer:audit", commitments: [commitment(locus, "negative", "audit-negative")] }];
+  const second = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  assert.notEqual(second, first);
+  assert.equal(first.sections[0].phase, "positive-bulk");
+  assert.equal(second.sections[0].phase, "negative-bulk");
+});
+
+test("canonical-equivalent observer and witness reorderings reuse the same projection", () => {
+  const observers = [
+    { actor: "urn:observer:runtime", commitments: [
+      { locus, polarity: "positive", witnessNis: [ni("runtime-positive-a"), ni("runtime-positive-b")] },
+      commitment(locus, "negative", "runtime-negative"),
+    ] },
+    { actor: "urn:observer:audit", commitments: [
+      commitment(locus, "negative", "audit-negative"),
+      { locus, polarity: "positive", witnessNis: [ni("audit-positive-a"), ni("audit-positive-b")] },
+    ] },
+  ];
+  const observerFamily = Object.freeze(family(observers));
+  const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  observers.reverse();
+  for (const observer of observers) {
+    observer.commitments.reverse();
+    for (const observed of observer.commitments) {
+      observed.witnessNis.reverse();
+      observed.witnessNis.push(observed.witnessNis[0]);
+    }
+  }
+  const second = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+
+  assert.equal(second.observerFamily.id, first.observerFamily.id);
+  assert.equal(second, first);
 });
