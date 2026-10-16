@@ -4,6 +4,9 @@ import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 
 const PHASE = Object.freeze({ absurd: "void", potential: "positive-bulk", active: "negative-bulk", stable: "interface" });
+// A long-lived MUD must not retain one permanent Map key for every territory
+// revision ever observed. Projection content identity survives cache eviction.
+const MAX_FROZEN_TERRITORIES = 256;
 const frozenProjectionCache = new Map();
 const closureEvidenceCache = new Map();
 
@@ -138,7 +141,14 @@ export function projectTerritoryFoam({ territoryAdmission, observerFamily } = {}
   const locusSet = new Set(loci.map(({ locus }) => locus));
   const family = admitObserverFamily(observerFamily, locusSet);
   if (Object.isFrozen(observerFamily)) {
-    const prior = frozenProjectionCache.get(admission.id)?.get(observerFamily);
+    const cached = frozenProjectionCache.get(admission.id);
+    if (cached !== undefined) {
+      // Reuse is least-recently-used by admitted territory, never by raw
+      // mutable observer inputs. The current canonical family is admitted above.
+      frozenProjectionCache.delete(admission.id);
+      frozenProjectionCache.set(admission.id, cached);
+    }
+    const prior = cached?.get(observerFamily);
     if (prior?.observerFamilyNi === family.id) return prior.projection;
   }
   const relations = territoryRelations(admission, territory, locusSet);
@@ -180,6 +190,11 @@ export function projectTerritoryFoam({ territoryAdmission, observerFamily } = {}
   if (Object.isFrozen(observerFamily)) {
     let byObserver = frozenProjectionCache.get(admission.id);
     if (byObserver === undefined) {
+      // Exactly one bounded weak-key table per currently useful admission.
+      // Eviction changes reuse only, not semantic IDs, evidence or FOUR values.
+      if (frozenProjectionCache.size >= MAX_FROZEN_TERRITORIES) {
+        frozenProjectionCache.delete(frozenProjectionCache.keys().next().value);
+      }
       byObserver = new WeakMap();
       frozenProjectionCache.set(admission.id, byObserver);
     }
