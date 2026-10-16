@@ -184,3 +184,27 @@ test("canonical-equivalent observer and witness reorderings reuse the same proje
   assert.equal(second.observerFamily.id, first.observerFamily.id);
   assert.equal(second, first);
 });
+
+test("many admitted territories cannot permanently accumulate frozen projection cache entries", () => {
+  const observerFamily = Object.freeze(family([]));
+  const first = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+  const stillCached = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+  assert.strictEqual(stillCached, first, "hot canonical reuse remains identity-stable");
+  // More than the declared 256 territorial slots, using genuinely distinct,
+  // admitted content identities rather than arbitrary malformed user inputs.
+  for (let i = 0; i < 270; i++) {
+    const changingTerritory = structuredClone(territory);
+    changingTerritory.id = ni("bounded-foam-territory-" + i);
+    const changedAdmission = createCarrierAdmissionReceipt({
+      carrier: { type: changingTerritory.type, value: changingTerritory },
+      protocolVerificationReceiptNis: [ni("territory-protocol")],
+    });
+    const field = projectTerritoryFoam({ territoryAdmission: changedAdmission, observerFamily });
+    assert.equal(field.sections[0].phase, "void");
+  }
+  const receivedAgain = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+  assert.equal(receivedAgain.id, first.id, "eviction may never change the semantic content address");
+  assert.notStrictEqual(receivedAgain, first, "the cold territorial entry was evicted");
+  assert.strictEqual(projectTerritoryFoam({ territoryAdmission: admission, observerFamily }),
+    receivedAgain, "revisited work is cached again");
+});
