@@ -6,8 +6,7 @@
   "description": "Live SemioticExchange and observer-relative codebase-territory projections with earned loci, explicit-support FOUR charge, and finite closure evidence.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/red-cup-engineering/semiotic-computer-system-services-section.git",
-    "directory": "services/semiotic-exchange-chain-services-section/services/modeled-union-dimension"
+    "url": "git+https://github.com/red-cup-engineering/modeled-union-dimension.git"
   },
   "exports": {
     ".": "./src/index.mjs",
