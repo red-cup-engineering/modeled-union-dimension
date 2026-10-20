@@ -37,6 +37,27 @@ test("the same admitted territory is void, bulk, or interface relative to observ
   assert.notEqual(bulk.id, wall.id);
 });
 
+test("one observer can witness both evidence coordinates without inventing another actor", () => {
+  const observerFamily = family([{
+    actor: "urn:observer:runtime",
+    commitments: [
+      commitment(locus, "positive", "runtime-positive"),
+      commitment(locus, "negative", "runtime-negative"),
+    ],
+  }]);
+  const field = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
+  const section = field.sections[0];
+  assert.equal(field.observerFamily.observers.length, 1);
+  assert.equal(section.phase, "interface");
+  assert.equal(section.four.charge, "stable");
+  assert.equal(section.four.symbol, "top");
+  assert.equal(section.four.positiveEvidence.length, 1);
+  assert.equal(section.four.negativeEvidence.length, 1);
+  assert.deepEqual(section.four.positiveEvidence[0].witnessNis, [ni("runtime-positive")]);
+  assert.deepEqual(section.four.negativeEvidence[0].witnessNis, [ni("runtime-negative")]);
+  assert.equal(section.convergence.regime, "strict-finite");
+});
+
 test("each derived section retains territory, assertion, and closure content-address paths", () => {
   const field = projectTerritoryFoam({ territoryAdmission: admission, observerFamily: family([{ actor: "urn:observer:runtime", commitments: [commitment(locus, "positive", "runtime-positive")] }]) });
   const section = field.sections[0];

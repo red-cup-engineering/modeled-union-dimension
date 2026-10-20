@@ -1,5 +1,5 @@
 import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
 
 const IDENTIFIER = /^[a-z0-9]+(?:[-.:/][a-z0-9]+)*$/u;
 

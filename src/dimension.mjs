@@ -1,6 +1,6 @@
 import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
 import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
-import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
 import { projectTerritoryFoam } from "./foam-field.mjs";
 import { projectLSpace } from "./l-space.mjs";
 import { projectWorkCirculation } from "./work-circulation.mjs";
