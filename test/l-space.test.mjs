@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension, createNotebookLmLibraryQueryActuator, NOTEBOOK_PROVIDER } from "../src/index.mjs";
 import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 
