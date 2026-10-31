@@ -1,0 +1,131 @@
+diff --git a/package.json b/package.json
+--- a/package.json
++++ b/package.json
+@@ -23,7 +23,6 @@
+   "dependencies": {
+     "@red-cup-engineering/computer-data-engineering-services-section": "workspace:*",
+     "@red-cup-engineering/metrologic": "workspace:*",
+-    "@red-cup-engineering/computer-content-address-engineering-services-section": "workspace:*",
+     "@red-cup-engineering/uri-services-section": "workspace:*"
+   }
+ }
+diff --git a/src/codex-tool-observation.mjs b/src/codex-tool-observation.mjs
+--- a/src/codex-tool-observation.mjs
++++ b/src/codex-tool-observation.mjs
+@@ -1,5 +1,5 @@
+ import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ 
+ const SHA = /^sha256:[a-f0-9]{64}$/u;
+ const PROVIDER = "urn:ame:codex-session-activity-provider:tool-observation";
+diff --git a/src/dimension.mjs b/src/dimension.mjs
+--- a/src/dimension.mjs
++++ b/src/dimension.mjs
+@@ -1,6 +1,6 @@
+ import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
+ import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+-import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ import { projectTerritoryFoam } from "./foam-field.mjs";
+ import { projectLSpace } from "./l-space.mjs";
+ import { projectWorkCirculation } from "./work-circulation.mjs";
+diff --git a/src/foam-field.mjs b/src/foam-field.mjs
+--- a/src/foam-field.mjs
++++ b/src/foam-field.mjs
+@@ -1,7 +1,7 @@
+ import { fixedSet, readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
+ import { closureMonadReceipt, knowledgeJoinClosure } from "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber";
+ import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ 
+ const PHASE = Object.freeze({ absurd: "void", potential: "positive-bulk", active: "negative-bulk", stable: "interface" });
+ // A long-lived MUD must not retain one permanent Map key for every territory
+diff --git a/src/l-space.mjs b/src/l-space.mjs
+--- a/src/l-space.mjs
++++ b/src/l-space.mjs
+@@ -1,7 +1,7 @@
+ import { createHash } from "node:crypto";
+ import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
+ import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ 
+ const SHA = /^sha256:[a-f0-9]{64}$/u;
+ export const NOTEBOOK_PROVIDER = "urn:ame:notebooklm-inference-team";
+diff --git a/src/work-circulation.mjs b/src/work-circulation.mjs
+--- a/src/work-circulation.mjs
++++ b/src/work-circulation.mjs
+@@ -1,5 +1,5 @@
+ import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ 
+ const IDENTIFIER = /^[a-z0-9]+(?:[-.:/][a-z0-9]+)*$/u;
+ 
+diff --git a/test/dimension.test.mjs b/test/dimension.test.mjs
+--- a/test/dimension.test.mjs
++++ b/test/dimension.test.mjs
+@@ -1,6 +1,6 @@
+ import assert from "node:assert/strict";
+ import test from "node:test";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ import { createCarrierAdmissionReceipt, createModeledUnionDimension, induceTemporalFailureRepairMoves } from "../src/index.mjs";
+ import {
+   inducePrivateLiveMudDemand,
+diff --git a/test/foam-field.test.mjs b/test/foam-field.test.mjs
+--- a/test/foam-field.test.mjs
++++ b/test/foam-field.test.mjs
+@@ -37,6 +37,27 @@ test("the same admitted territory is void, bulk, or interface relative to observ
+   assert.notEqual(bulk.id, wall.id);
+ });
+ 
++test("one observer can witness both evidence coordinates without inventing another actor", () => {
++  const observerFamily = family([{
++    actor: "urn:observer:runtime",
++    commitments: [
++      commitment(locus, "positive", "runtime-positive"),
++      commitment(locus, "negative", "runtime-negative"),
++    ],
++  }]);
++  const field = projectTerritoryFoam({ territoryAdmission: admission, observerFamily });
++  const section = field.sections[0];
++  assert.equal(field.observerFamily.observers.length, 1);
++  assert.equal(section.phase, "interface");
++  assert.equal(section.four.charge, "stable");
++  assert.equal(section.four.symbol, "top");
++  assert.equal(section.four.positiveEvidence.length, 1);
++  assert.equal(section.four.negativeEvidence.length, 1);
++  assert.deepEqual(section.four.positiveEvidence[0].witnessNis, [ni("runtime-positive")]);
++  assert.deepEqual(section.four.negativeEvidence[0].witnessNis, [ni("runtime-negative")]);
++  assert.equal(section.convergence.regime, "strict-finite");
++});
++
+ test("each derived section retains territory, assertion, and closure content-address paths", () => {
+   const field = projectTerritoryFoam({ territoryAdmission: admission, observerFamily: family([{ actor: "urn:observer:runtime", commitments: [commitment(locus, "positive", "runtime-positive")] }]) });
+   const section = field.sections[0];
+diff --git a/test/l-space.test.mjs b/test/l-space.test.mjs
+--- a/test/l-space.test.mjs
++++ b/test/l-space.test.mjs
+@@ -1,6 +1,6 @@
+ import assert from "node:assert/strict";
+ import test from "node:test";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ import { createCarrierAdmissionReceipt, createModeledUnionDimension, createNotebookLmLibraryQueryActuator, NOTEBOOK_PROVIDER } from "../src/index.mjs";
+ import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ 
+diff --git a/test/work-circulation.test.mjs b/test/work-circulation.test.mjs
+--- a/test/work-circulation.test.mjs
++++ b/test/work-circulation.test.mjs
+@@ -1,6 +1,6 @@
+ import assert from "node:assert/strict";
+ import test from "node:test";
+-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
++import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+ import { createCarrierAdmissionReceipt, createModeledUnionDimension, createWorkCarrier, deriveCultivationDemandCarrier } from "../src/index.mjs";
+ import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ 
+

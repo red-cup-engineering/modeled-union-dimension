@@ -16,15 +16,18 @@
     "./work-circulation": "./src/work-circulation.mjs"
   },
   "scripts": {
-    "check": "node --check src/index.mjs && node --check src/dimension.mjs && node --check src/foam-field.mjs && node --check src/l-space.mjs && node --check src/temporal-failure-repair.mjs && node --check src/work-circulation.mjs && node --check src/codex-tool-observation.mjs",
+    "check": "node --check src/index.mjs && node --check src/dimension.mjs && node --check src/foam-field.mjs && node --check src/l-space.mjs && node --check src/temporal-failure-repair.mjs && node --check src/work-circulation.mjs && node --check src/codex-tool-observation.mjs && node --check src/managed-exchange.mjs",
     "test": "node --test test/*.test.mjs",
     "verify": "npm run check && npm test"
   },
   "dependencies": {
-    "@red-cup-engineering/computer-data-engineering-services-section": "workspace:*",
-    "@red-cup-engineering/metrologic": "workspace:*",
-    "@red-cup-engineering/computer-content-address-engineering-services-section": "workspace:*",
-    "@red-cup-engineering/uri-services-section": "workspace:*"
+    "@red-cup-engineering/computer-data-engineering-services-section": "0.6.1",
+    "@red-cup-engineering/metrologic": "0.4.0",
+    "@red-cup-engineering/uri-services-section": "0.1.2"
+  },
+  "devDependencies": {
+    "@red-cup-engineering/semiotic-exchange-chain-services-section": "0.1.9",
+    "@red-cup-engineering/computer-systems-fabrication-engineering-services-section": "0.3.2"
   },
   "license": "MIT",
   "funding": {

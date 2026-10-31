@@ -1,0 +1,29 @@
+{
+  "cwd": "/workspace/scratch/96a3ae9a64a4/exchange-consumers/sources/modeled-union-dimension",
+  "arguments": [
+    "npm",
+    "install",
+    "--ignore-scripts",
+    "--no-audit",
+    "--no-fund",
+    "--fetch-retries=0",
+    "--fetch-timeout=10000",
+    "--registry=https://registry.561.group/",
+    "--cache=/workspace/scratch/96a3ae9a64a4/exchange-consumers/npm-cache"
+  ],
+  "inputs": {
+    "package.json": "93f40d5614d815bb5ad4361a9c326aa2e917dfa1754fc8ef54da1f95ef189b98",
+    ".npmrc": "8de08949bab508293e0d9aa76a511469ee2d306b1f6140a8f60c0d1de8b17fe2"
+  },
+  "selection": {
+    "computer-data-engineering-services-section": "0.6.1",
+    "metrologic": "0.4.0",
+    "uri-services-section": "0.1.2"
+  },
+  "basis": "Actual original Ethereum lock-selected registry suppliers; root-approved Dimension candidate",
+  "startedAt": 1793481500.309629,
+  "exitCode": 0,
+  "finishedAt": 1793481502.488182,
+  "inputsUnchanged": true,
+  "generatedLockSHA256": "30283db3d7122c5bdbd618669b99a7daa25d4b764d9b3b4e91055bca547f52d7"
+}

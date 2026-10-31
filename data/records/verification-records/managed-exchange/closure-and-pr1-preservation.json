@@ -1,0 +1,46 @@
+{
+  "main": "35f60898345ec65f0afb37cd789739ad3f305408",
+  "originalPR1": "a9f520dfe1b239acff60ae3b2c24dd2650ff7ac6",
+  "unchangedPR1Files": {
+    "src/codex-tool-observation.mjs": {
+      "originalPR1Blob": "2bd6c8f5883b3775a8f5a56f0653d45b34b940e7",
+      "candidateBlob": "2bd6c8f5883b3775a8f5a56f0653d45b34b940e7",
+      "exactlyPreserved": true
+    },
+    "src/foam-field.mjs": {
+      "originalPR1Blob": "d7e7e43409dd8a1a3ce7872cd13f28e7e9b5110a",
+      "candidateBlob": "d7e7e43409dd8a1a3ce7872cd13f28e7e9b5110a",
+      "exactlyPreserved": true
+    },
+    "src/l-space.mjs": {
+      "originalPR1Blob": "8619a7fc45c27146357a56148e919bab64d83415",
+      "candidateBlob": "8619a7fc45c27146357a56148e919bab64d83415",
+      "exactlyPreserved": true
+    },
+    "test/foam-field.test.mjs": {
+      "originalPR1Blob": "5102094fc88469926821a3ee12c4a040f58bffdb",
+      "candidateBlob": "5102094fc88469926821a3ee12c4a040f58bffdb",
+      "exactlyPreserved": true
+    },
+    "test/l-space.test.mjs": {
+      "originalPR1Blob": "c721c29afb86485c589efeb961cf49e74f953e76",
+      "candidateBlob": "c721c29afb86485c589efeb961cf49e74f953e76",
+      "exactlyPreserved": true
+    },
+    "test/work-circulation.test.mjs": {
+      "originalPR1Blob": "2a41f2695ab280044cc31e1eaf51e3568884ace8",
+      "candidateBlob": "2a41f2695ab280044cc31e1eaf51e3568884ace8",
+      "exactlyPreserved": true
+    }
+  },
+  "changedPR1Files": [
+    "src/dimension.mjs",
+    "src/work-circulation.mjs",
+    "test/dimension.test.mjs",
+    "package.json"
+  ],
+  "changedPR1Scope": "Data ownership corrections retained in these files alongside managed implementation, original public test import repair and exact standalone dependency selection",
+  "manifestLockDirectEdgesMatch": true,
+  "lockSHA256": "30283db3d7122c5bdbd618669b99a7daa25d4b764d9b3b4e91055bca547f52d7",
+  "selectedPackageRecords": 999
+}

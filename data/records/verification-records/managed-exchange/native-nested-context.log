@@ -1,0 +1,29 @@
+
+> @red-cup-engineering/modeled-union-dimension@0.2.3 verify
+> npm run check && npm test
+
+
+> @red-cup-engineering/modeled-union-dimension@0.2.3 check
+> node --check src/index.mjs && node --check src/dimension.mjs && node --check src/foam-field.mjs && node --check src/l-space.mjs && node --check src/temporal-failure-repair.mjs && node --check src/work-circulation.mjs && node --check src/codex-tool-observation.mjs && node --check src/managed-exchange.mjs
+
+
+> @red-cup-engineering/modeled-union-dimension@0.2.3 test
+> node --test test/*.test.mjs
+
+✔ test/codex-tool-observation.test.mjs (327.553601ms)
+✔ test/dimension.test.mjs (566.587685ms)
+✔ test/foam-field.test.mjs (3160.148276ms)
+✔ test/l-space.test.mjs (247.425406ms)
+✔ test/marsh-managed-dimension.test.mjs (1267.699964ms)
+✔ test/work-circulation.test.mjs (190.162326ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3176.194517
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
