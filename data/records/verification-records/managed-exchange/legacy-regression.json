@@ -1,0 +1,33 @@
+{
+  "claim": "Existing 36 assertions preserved across managed changes; no managed acceptance cases included",
+  "command": [
+    "node",
+    "--test",
+    "--test-isolation=none",
+    "--test-reporter=tap",
+    "test/codex-tool-observation.test.mjs",
+    "test/dimension.test.mjs",
+    "test/foam-field.test.mjs",
+    "test/l-space.test.mjs",
+    "test/work-circulation.test.mjs"
+  ],
+  "exitCode": 0,
+  "tests": 36,
+  "pass": 36,
+  "fail": 0,
+  "skipped": 0,
+  "cancelled": 0,
+  "outputSHA256": "07b491b736718755d2ff84f37bab2016cae658655a1a3b23e67be93a72611b79",
+  "sourceSHA256": {
+    "src/work-circulation.mjs": "81033c43bff7db5bdda102eb1822cc4858ed6eeb449f496dbf5e5aecf43883d9",
+    "src/l-space.mjs": "4d267582130533ef1089f4f77749efbd912ccb07a860563177633aa33790de9d",
+    "src/foam-field.mjs": "cdb97d02106f849daeea3ee53c89af093615a34c1ae94f8b54e555f724e4a85f",
+    "src/temporal-failure-repair.mjs": "b6223cdec2fb6453f06d7e3fb183201cf7b8a00f994f5b26e64fffe3d7fe3ba1",
+    "src/dimension.mjs": "d1e83bd837baa3f5db5bd51a035cdd2f5fb9ecfdf882fc3af314b2d6eea9fb82",
+    "src/managed-exchange.mjs": "d08c45ae0226497c1e939f90bbcf8ce931afb88121fab9c6c1e9cc3a19f992bd",
+    "src/codex-tool-observation.mjs": "76e961c7953ffd3c9075e4d77700f4d88a8721e2d282bc23903d2494ec7bdaf4",
+    "src/index.mjs": "18d98f1500b233be06297ad5b4ee83a4f0f036d072c50773de96a231ed247480",
+    "package.json": "13b7f52a093f7115ae49c811273b93204b457c7e67ffc9441ab084d6dc27df0a",
+    "package-lock.json": "30283db3d7122c5bdbd618669b99a7daa25d4b764d9b3b4e91055bca547f52d7"
+  }
+}

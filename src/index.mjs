@@ -1,5 +1,8 @@
 export {
   ACTOR,
+  MARSH_EXCHANGE_PROFILE,
+  MARSH_EXCHANGE_PROFILE_ID,
+  LEGACY_EXCHANGE_PROFILE,
   createCarrierAdmissionReceipt,
   createModeledUnionDimension,
 } from "./dimension.mjs";

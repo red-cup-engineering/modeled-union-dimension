@@ -1,0 +1,28 @@
+{
+  "claim": "Preserved original PR1 source plus real owner test imports; managed migration not yet authored",
+  "command": [
+    "npm",
+    "run",
+    "verify"
+  ],
+  "startedAt": 1793481510.3983374,
+  "finishedAt": 1793481515.1728094,
+  "exitCode": 0,
+  "sourceSHA256": {
+    "package-lock.json": "30283db3d7122c5bdbd618669b99a7daa25d4b764d9b3b4e91055bca547f52d7",
+    "package.json": "93f40d5614d815bb5ad4361a9c326aa2e917dfa1754fc8ef54da1f95ef189b98",
+    "src/codex-tool-observation.mjs": "76e961c7953ffd3c9075e4d77700f4d88a8721e2d282bc23903d2494ec7bdaf4",
+    "src/dimension.mjs": "c6690bc68671e5de1b8adeb3ed22dfc220924380a00d25cbe001e55343b06053",
+    "src/foam-field.mjs": "cdb97d02106f849daeea3ee53c89af093615a34c1ae94f8b54e555f724e4a85f",
+    "src/index.mjs": "01109b20628161acf4181d32834512db1890d61a1d4441d7a3398105c7ad2f79",
+    "src/l-space.mjs": "4d267582130533ef1089f4f77749efbd912ccb07a860563177633aa33790de9d",
+    "src/temporal-failure-repair.mjs": "b6223cdec2fb6453f06d7e3fb183201cf7b8a00f994f5b26e64fffe3d7fe3ba1",
+    "src/work-circulation.mjs": "c405035aee1d8970b68d4efc5632f57ddfb1a46cb7a7af4ca750c31d470d0956",
+    "test/codex-tool-observation.test.mjs": "430e456f5185db1298175f3624735a0a8727f6c908c6deebf58044d7025ccd0b",
+    "test/dimension.test.mjs": "962fedae33a1c048b14a6b746367f6018fede0d41136b550c779efc05f633b83",
+    "test/foam-field.test.mjs": "3e345995b972d2a78c6bbe4067c7a7c12d240ba706321935b7fc0e6e24869299",
+    "test/l-space.test.mjs": "337142b01cb63f269a051631751ca4f0ea22e400e481a3b374c28bacacc40e82",
+    "test/work-circulation.test.mjs": "983a0095b51e7caeb2ce698baedebb391fcc126c74e44b8689ee35404e0b776a"
+  },
+  "outputSHA256": "aadc8912b5c3d26e98ddae3f8070423e7c298a043b42ad502a4debfc7044dfaa"
+}

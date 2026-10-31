@@ -1,0 +1,61 @@
+{
+  "head": "35f60898345ec65f0afb37cd789739ad3f305408",
+  "workingSourceSHA256": {
+    "package-lock.json": "30283db3d7122c5bdbd618669b99a7daa25d4b764d9b3b4e91055bca547f52d7",
+    "package.json": "13b7f52a093f7115ae49c811273b93204b457c7e67ffc9441ab084d6dc27df0a",
+    "src/codex-tool-observation.mjs": "76e961c7953ffd3c9075e4d77700f4d88a8721e2d282bc23903d2494ec7bdaf4",
+    "src/dimension.mjs": "6d5c062c161d3a61a1377fcf755d7984e53c37b2ee1a3a1bce77ba500af83aec",
+    "src/foam-field.mjs": "cdb97d02106f849daeea3ee53c89af093615a34c1ae94f8b54e555f724e4a85f",
+    "src/index.mjs": "18d98f1500b233be06297ad5b4ee83a4f0f036d072c50773de96a231ed247480",
+    "src/l-space.mjs": "4d267582130533ef1089f4f77749efbd912ccb07a860563177633aa33790de9d",
+    "src/managed-exchange.mjs": "d08c45ae0226497c1e939f90bbcf8ce931afb88121fab9c6c1e9cc3a19f992bd",
+    "src/temporal-failure-repair.mjs": "b6223cdec2fb6453f06d7e3fb183201cf7b8a00f994f5b26e64fffe3d7fe3ba1",
+    "src/work-circulation.mjs": "81033c43bff7db5bdda102eb1822cc4858ed6eeb449f496dbf5e5aecf43883d9",
+    "test/codex-tool-observation.test.mjs": "430e456f5185db1298175f3624735a0a8727f6c908c6deebf58044d7025ccd0b",
+    "test/dimension.test.mjs": "962fedae33a1c048b14a6b746367f6018fede0d41136b550c779efc05f633b83",
+    "test/foam-field.test.mjs": "3e345995b972d2a78c6bbe4067c7a7c12d240ba706321935b7fc0e6e24869299",
+    "test/l-space.test.mjs": "337142b01cb63f269a051631751ca4f0ea22e400e481a3b374c28bacacc40e82",
+    "test/marsh-managed-dimension.test.mjs": "f25c7036b81de388916f6d56bd78014d11f347aee1422e9d09b05d8aa15c19f8",
+    "test/work-circulation.test.mjs": "983a0095b51e7caeb2ce698baedebb391fcc126c74e44b8689ee35404e0b776a"
+  },
+  "inputsUnchanged": true,
+  "records": [
+    {
+      "stage": "native-final",
+      "command": [
+        "npm",
+        "run",
+        "verify"
+      ],
+      "exitCode": 0,
+      "startedAt": 1793482160.27616,
+      "finishedAt": 1793482164.28373,
+      "outputSHA256": "5b57fa9b6c0a7196fd672a1a263315a5c59826d71271b2aadfab49ed01c81a30"
+    },
+    {
+      "stage": "enumerated-final",
+      "command": [
+        "node",
+        "--test",
+        "--test-isolation=none",
+        "--test-reporter=tap",
+        "test/codex-tool-observation.test.mjs",
+        "test/dimension.test.mjs",
+        "test/foam-field.test.mjs",
+        "test/l-space.test.mjs",
+        "test/work-circulation.test.mjs",
+        "test/marsh-managed-dimension.test.mjs"
+      ],
+      "exitCode": 0,
+      "startedAt": 1793482164.2837589,
+      "finishedAt": 1793482168.435471,
+      "outputSHA256": "727921a5cae4914f8309da224c9dea898ee1db3bd094622f9e18b7c1ccacb2e8"
+    }
+  ],
+  "authorityContext": "flat primitive marshProfile/marshExchange/marshActionId, actual UCAN0.1.2 attenuation contract",
+  "limits": [
+    "Original native gate retained; additional enumerated runner reports65 tests.",
+    "New29case suite independently authored by evm_review and unread by source author; original36 regression tests preserved.",
+    "Local source/closure gate is not live account authority, deployment, finality, or actual consumer receiving."
+  ]
+}

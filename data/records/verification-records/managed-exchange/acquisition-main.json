@@ -1,0 +1,103 @@
+{
+  "repository": "red-cup-engineering/modeled-union-dimension",
+  "revision": "35f60898345ec65f0afb37cd789739ad3f305408",
+  "method": "GitHub connector fetch_file after blocked executor network; independently verified each original Git blob and byte size",
+  "files": [
+    {
+      "path": "LICENSE",
+      "gitBlob": "61dbf67e6e610419422691ddd728f2c3647608bb",
+      "size": 1101,
+      "sha256": "e264f6d8d0c46911b9ca7a2a46a10fd1a2e7b64822f236b04a6afa7ee79083af"
+    },
+    {
+      "path": "README.md",
+      "gitBlob": "0c898063784a9417d4cbe7776d0f0e23325da5d8",
+      "size": 759,
+      "sha256": "932974e535e546617fa19fe1fdc353c8fd1095fcf190ef661f141fef8d05d485"
+    },
+    {
+      "path": "package-lock.json",
+      "gitBlob": "600fa45d882476da36c890a89bea2537ee67e3b1",
+      "size": 6376,
+      "sha256": "c4e1169f1b90e7e14b61cd3b683edc4774592e7ee47d14a46e4f5cc57c93f4b3"
+    },
+    {
+      "path": "package.json",
+      "gitBlob": "0fac9573ae72e684b8718a34d6f2dd125421502c",
+      "size": 1491,
+      "sha256": "6801c1db73aaf2a1fc65f14d253dc33a30ce2d451464fc6332a4cfc2d95696e9"
+    },
+    {
+      "path": "src/codex-tool-observation.mjs",
+      "gitBlob": "17895cdddcc1b90d0d1bd5481772f46c4783da8c",
+      "size": 7652,
+      "sha256": "b83ddda0a0a8827e0d255d017d154d190dabf80ae828b585424af1b81d2f1102"
+    },
+    {
+      "path": "src/dimension.mjs",
+      "gitBlob": "a067b5bf78dcb2db25f2877489587edc202279e7",
+      "size": 36101,
+      "sha256": "95a75f051bc33046252680849f47a0de00856dba43d4f4731cfbdd9dc8b324db"
+    },
+    {
+      "path": "src/foam-field.mjs",
+      "gitBlob": "31aec7d32cb7a44f003dc29a4277c9ad21ee759d",
+      "size": 14272,
+      "sha256": "aed835e26a024cfac15a67ed11aec55f6a496e7ecaf5da1a51981851f1bb7c08"
+    },
+    {
+      "path": "src/index.mjs",
+      "gitBlob": "632bfd5fa78f6eae6a6d2503a13ac26220a69dc7",
+      "size": 608,
+      "sha256": "01109b20628161acf4181d32834512db1890d61a1d4441d7a3398105c7ad2f79"
+    },
+    {
+      "path": "src/l-space.mjs",
+      "gitBlob": "4c2a35ee481a59a434d9b842791c8b40533822ac",
+      "size": 15374,
+      "sha256": "6d9c37cad9ab8af89a90f0817c2798c6f244c6e8674235d10876fd764bafb9df"
+    },
+    {
+      "path": "src/temporal-failure-repair.mjs",
+      "gitBlob": "5f9d7700e346e16eacfee77f61d9f5990cdd4d24",
+      "size": 2127,
+      "sha256": "b6223cdec2fb6453f06d7e3fb183201cf7b8a00f994f5b26e64fffe3d7fe3ba1"
+    },
+    {
+      "path": "src/work-circulation.mjs",
+      "gitBlob": "d792ceb175c3be3cd29b2b7db7f4ce3a25cbe537",
+      "size": 13384,
+      "sha256": "066bf736f1ddc7ccd5e7362f036b8a13bf914e6a39bacae7bab817e70b5799d8"
+    },
+    {
+      "path": "test/codex-tool-observation.test.mjs",
+      "gitBlob": "1f115a891e4f2c214d900ff1a45f7f4f03927b06",
+      "size": 4215,
+      "sha256": "39cb6684f7ba450ee1a11ffa7ce7ea3ff946c66f79b317a61954b1ff0a84cc93"
+    },
+    {
+      "path": "test/dimension.test.mjs",
+      "gitBlob": "126a0fda456fe19b78ded338acfcd4bd71e4543b",
+      "size": 19285,
+      "sha256": "23d1509dd5c5bf352eb440026149e098e71c03baa3aad3f930bcd215e516e1d3"
+    },
+    {
+      "path": "test/foam-field.test.mjs",
+      "gitBlob": "ed383a45b983ae3dd7d05f86a56046bb2f8e81e7",
+      "size": 13373,
+      "sha256": "ba5ef07b7ed48eaeb4d74e4998050e63b9e220d3628ff37f84787f66a26458de"
+    },
+    {
+      "path": "test/l-space.test.mjs",
+      "gitBlob": "3079fbcddc11b93a5d3a8e2edbf4d3d6824c52f6",
+      "size": 7159,
+      "sha256": "11a331bd4183cb986e8d9d276d87c5bb9843fad069a25c4dc073b15456225f41"
+    },
+    {
+      "path": "test/work-circulation.test.mjs",
+      "gitBlob": "bb27ebd07c9349ef6973dbaa137115f648e371f6",
+      "size": 7337,
+      "sha256": "fdd870cb5d6d10d0b6c078bc18a6bae6ae6f688cecd374c66fa16737ed77a62f"
+    }
+  ]
+}

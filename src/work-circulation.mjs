@@ -1,6 +1,8 @@
 import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
 
+import { MARSH_EXCHANGE_PROFILE } from "./managed-exchange.mjs";
+
 const IDENTIFIER = /^[a-z0-9]+(?:[-.:/][a-z0-9]+)*$/u;
 
 function required(value, label) {
@@ -62,7 +64,7 @@ export function createWorkCarrier({ endeavor, project, milestone, duty, qualific
 function admitWorkCarrier(admission) {
   if (admission?.carrier?.type !== "UnionWorkCarrier") return null;
   const carrier = createWorkCarrier(admission.carrier.value);
-  if (identify(carrier, `semiotic-exchange.${carrier.type}`) !== admission.contentNi) throw new Error("UnionWorkCarrier admission does not match its canonical identity");
+  if (identify(admission.version === 2 ? carrier.value : carrier, `semiotic-exchange.${carrier.type}`) !== admission.contentNi) throw new Error("UnionWorkCarrier admission does not match its canonical identity");
   return freeze({ carrierNi: admission.contentNi, admissionReceiptNi: admission.id, work: carrier.value });
 }
 
@@ -146,10 +148,16 @@ export function projectWorkCirculation({ admissions, demands, offers, federation
     if (!admitted) continue;
     const work = admitted.work;
     const attempts = workAttempts(demand, work, offers, federationHistory);
-    const completed = attempts.find((attempt) => attempt.outcome === "completed" && demand.settlement && same(attempt.result, demand.settlement.result) && same(attempt.offer, demand.purchase?.offer));
+    const managed = demand.profile === MARSH_EXCHANGE_PROFILE;
+    const accepted = managed ? demand.receiving : demand.settlement;
+    const completed = attempts.find((attempt) => attempt.outcome === "completed" && accepted && same(attempt.result, accepted.result) && same(attempt.offer, demand.purchase?.offer));
     const refusals = attempts.filter((attempt) => attempt.outcome === "refused");
     const locus = freeze({
       type: "UnionWorkLocus", id: demand.id, demandNi: admitted.carrierNi, workCarrierAdmissionReceiptNi: admitted.admissionReceiptNi,
+      ...(managed ? { profile: MARSH_EXCHANGE_PROFILE, carrierId: demand.carrierId, exchangePhase: demand.phase, selectedOffer: demand.purchase?.offer ?? null,
+        submission: demand.submission, receiving: demand.receiving,
+        acceptance: demand.receiving === null ? null : { actor: demand.raiser, result: demand.receiving.result, receipt: demand.receiving.receipt, chainPosition: demand.receiving.chainPosition },
+        completionEvidenceNi: completed?.evidenceNi ?? null } : { settlementInterpretation: "legacy-provider-settlement" }),
       endeavor: work.endeavor, project: work.project, milestone: work.milestone, duty: work.duty, qualification: work.qualification,
       phase: completed ? "settled" : demand.purchase ? "engaged" : "open",
       grayDegree: completed ? "stable" : refusals.length > 0 ? "active" : "absurd",

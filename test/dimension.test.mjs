@@ -5,9 +5,9 @@ import { createCarrierAdmissionReceipt, createModeledUnionDimension, induceTempo
 import {
   inducePrivateLiveMudDemand,
   PRIVATE_LIVE_MUD_REQUIREMENTS,
-} from "../../../src/semiotic-exchange-demand-induction.mjs";
-import { induceCapabilityRepairDemand } from "../../../src/semiotic-exchange-demand-induction.mjs";
-import { scanTemporalFailureMarks } from "../../../../../../software-development-services-section/services/typed-resource-catalog-service/src/temporal-failure-normalization.mjs";
+} from "@red-cup-engineering/semiotic-exchange-chain-services-section/semiotic-exchange-demand-induction";
+import { induceCapabilityRepairDemand } from "@red-cup-engineering/semiotic-exchange-chain-services-section/semiotic-exchange-demand-induction";
+import { scanTemporalFailureMarks } from "@red-cup-engineering/computer-systems-fabrication-engineering-services-section/scan-temporal-failure-marks";
 import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 
 const exchange = "0x98bBC65824962b61dF876A47B5779C4EcBBD4939";

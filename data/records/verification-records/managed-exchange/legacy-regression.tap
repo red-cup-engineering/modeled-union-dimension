@@ -1,0 +1,226 @@
+TAP version 13
+# Subtest: an observed Codex tool request becomes a MUD locus and an unbound SXC capability-market demand, never an actuator or move
+ok 1 - an observed Codex tool request becomes a MUD locus and an unbound SXC capability-market demand, never an actuator or move
+  ---
+  duration_ms: 66.287199
+  type: 'test'
+  ...
+# Subtest: the MUD refuses a transcript observation that fabricates an actuator binding
+ok 2 - the MUD refuses a transcript observation that fabricates an actuator binding
+  ---
+  duration_ms: 9.678587
+  type: 'test'
+  ...
+# Subtest: replays monotone live contract history into earned loci and causal relations
+ok 3 - replays monotone live contract history into earned loci and causal relations
+  ---
+  duration_ms: 2.146879
+  type: 'test'
+  ...
+# Subtest: WorkspaceContentGraph v3 relations remain carriers rather than becoming inferred evidence
+ok 4 - WorkspaceContentGraph v3 relations remain carriers rather than becoming inferred evidence
+  ---
+  duration_ms: 22.219359
+  type: 'test'
+  ...
+# Subtest: WorkspaceContentGraph refuses relation overlays that infer evidence or FOUR from carrier fields
+ok 5 - WorkspaceContentGraph refuses relation overlays that infer evidence or FOUR from carrier fields
+  ---
+  duration_ms: 7.510977
+  type: 'test'
+  ...
+# Subtest: FOUR charge consumes only exact top-level admitted federation standings
+ok 6 - FOUR charge consumes only exact top-level admitted federation standings
+  ---
+  duration_ms: 4.241028
+  type: 'test'
+  ...
+# Subtest: canonical carrier and paired UCAN/controller receipts enable one restricted purchase move
+ok 7 - canonical carrier and paired UCAN/controller receipts enable one restricted purchase move
+  ---
+  duration_ms: 7.036113
+  type: 'test'
+  ...
+# Subtest: refuses forged carrier identity and ungrounded authority
+ok 8 - refuses forged carrier identity and ungrounded authority
+  ---
+  duration_ms: 6.484503
+  type: 'test'
+  ...
+# Subtest: a witnessed canonical induction projects private GUI deployment as a real restricted move
+ok 9 - a witnessed canonical induction projects private GUI deployment as a real restricted move
+  ---
+  duration_ms: 113.826415
+  type: 'test'
+  ...
+# Subtest: x402 evidence is exact top-level federation matter, never a recursive shape scan
+ok 10 - x402 evidence is exact top-level federation matter, never a recursive shape scan
+  ---
+  duration_ms: 1.980298
+  type: 'test'
+  ...
+# Subtest: refuses displaced roles, noncausal ordering, and incoherent FOUR standings
+ok 11 - refuses displaced roles, noncausal ordering, and incoherent FOUR standings
+  ---
+  duration_ms: 0.903739
+  type: 'test'
+  ...
+# Subtest: a refusal becomes an open capability market locus and only a later positive settled provider receipt closes it
+ok 12 - a refusal becomes an open capability market locus and only a later positive settled provider receipt closes it
+  ---
+  duration_ms: 31.230562
+  type: 'test'
+  ...
+# Subtest: an A2A repository observation and temporal scan induce an actual restricted repair-market move
+ok 13 - an A2A repository observation and temporal scan induce an actual restricted repair-market move
+  ---
+  duration_ms: 16.492576
+  type: 'test'
+  ...
+# Subtest: the same admitted territory is void, bulk, or interface relative to observer family D
+ok 14 - the same admitted territory is void, bulk, or interface relative to observer family D
+  ---
+  duration_ms: 42.533192
+  type: 'test'
+  ...
+# Subtest: one observer can witness both evidence coordinates without inventing another actor
+ok 15 - one observer can witness both evidence coordinates without inventing another actor
+  ---
+  duration_ms: 15.607155
+  type: 'test'
+  ...
+# Subtest: each derived section retains territory, assertion, and closure content-address paths
+ok 16 - each derived section retains territory, assertion, and closure content-address paths
+  ---
+  duration_ms: 11.709191
+  type: 'test'
+  ...
+# Subtest: the MUD core appends admitted territory sections to its canonical loci presentation
+ok 17 - the MUD core appends admitted territory sections to its canonical loci presentation
+  ---
+  duration_ms: 16.157412
+  type: 'test'
+  ...
+# Subtest: negation self-dual values and higher-regime obstruction are explicit
+ok 18 - negation self-dual values and higher-regime obstruction are explicit
+  ---
+  duration_ms: 9.221189
+  type: 'test'
+  ...
+# Subtest: refuses unwitnessed, off-territory, and recursively nested commitments
+ok 19 - refuses unwitnessed, off-territory, and recursively nested commitments
+  ---
+  duration_ms: 15.3456
+  type: 'test'
+  ...
+# Subtest: reuses the exact section only for identical frozen carrier and observer coordinates
+ok 20 - reuses the exact section only for identical frozen carrier and observer coordinates
+  ---
+  duration_ms: 22.201161
+  type: 'test'
+  ...
+# Subtest: the MUD presentation carries only the canonical mission law locus and content address
+ok 21 - the MUD presentation carries only the canonical mission law locus and content address
+  ---
+  duration_ms: 0.43927
+  type: 'test'
+  ...
+# Subtest: a shallow-frozen family is reprojected when nested commitment polarity changes
+ok 22 - a shallow-frozen family is reprojected when nested commitment polarity changes
+  ---
+  duration_ms: 21.597403
+  type: 'test'
+  ...
+# Subtest: a shallow-frozen family is reprojected when nested witness evidence changes
+ok 23 - a shallow-frozen family is reprojected when nested witness evidence changes
+  ---
+  duration_ms: 24.827121
+  type: 'test'
+  ...
+# Subtest: cached families still reject newly invalid or off-territory nested commitments
+ok 24 - cached families still reject newly invalid or off-territory nested commitments
+  ---
+  duration_ms: 26.445645
+  type: 'test'
+  ...
+# Subtest: a frozen accessor family is compared by its currently admitted evidence
+ok 25 - a frozen accessor family is compared by its currently admitted evidence
+  ---
+  duration_ms: 24.245986
+  type: 'test'
+  ...
+# Subtest: canonical-equivalent observer and witness reorderings reuse the same projection
+ok 26 - canonical-equivalent observer and witness reorderings reuse the same projection
+  ---
+  duration_ms: 19.5874
+  type: 'test'
+  ...
+# Subtest: many admitted territories cannot permanently accumulate frozen projection cache entries
+ok 27 - many admitted territories cannot permanently accumulate frozen projection cache entries
+  ---
+  duration_ms: 2911.180316
+  type: 'test'
+  ...
+# Subtest: admitted notebook/library carriers project private, content-addressed L-space loci
+ok 28 - admitted notebook/library carriers project private, content-addressed L-space loci
+  ---
+  duration_ms: 5.140782
+  type: 'test'
+  ...
+# Subtest: a query move is restricted to a witnessed locus and unavailable with the exact provider obstruction
+ok 29 - a query move is restricted to a witnessed locus and unavailable with the exact provider obstruction
+  ---
+  duration_ms: 4.136601
+  type: 'test'
+  ...
+# Subtest: the existing provider path settles a citation-bound advisory receipt whose evidence joins FOUR
+ok 30 - the existing provider path settles a citation-bound advisory receipt whose evidence joins FOUR
+  ---
+  duration_ms: 11.945547
+  type: 'test'
+  ...
+# Subtest: citation references cannot escape the admitted source set
+ok 31 - citation references cannot escape the admitted source set
+  ---
+  duration_ms: 5.604038
+  type: 'test'
+  ...
+# Subtest: the adapter invokes the inference team's existing live-library path without emitting private provider locators
+ok 32 - the adapter invokes the inference team's existing live-library path without emitting private provider locators
+  ---
+  duration_ms: 7.400761
+  type: 'test'
+  ...
+# Subtest: one admitted work carrier gives a chain demand an endeavor/project/milestone/duty descent
+ok 33 - one admitted work carrier gives a chain demand an endeavor/project/milestone/duty descent
+  ---
+  duration_ms: 5.36562
+  type: 'test'
+  ...
+# Subtest: only an office-qualified cohort member can offer a work demand
+ok 34 - only an office-qualified cohort member can offer a work demand
+  ---
+  duration_ms: 8.654427
+  type: 'test'
+  ...
+# Subtest: a negative provider assignment is retained as a canonical cultivation demand, while later completion settles the milestone
+ok 35 - a negative provider assignment is retained as a canonical cultivation demand, while later completion settles the milestone
+  ---
+  duration_ms: 5.42513
+  type: 'test'
+  ...
+# Subtest: malformed work hierarchy cannot be admitted as a demand carrier
+ok 36 - malformed work hierarchy cannot be admitted as a demand carrier
+  ---
+  duration_ms: 0.162184
+  type: 'test'
+  ...
+1..36
+# tests 36
+# suites 0
+# pass 36
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3688.00247

@@ -1,10 +1,13 @@
 import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
-import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { isNiUri, makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
 import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
 import { projectTerritoryFoam } from "./foam-field.mjs";
 import { projectLSpace } from "./l-space.mjs";
 import { projectWorkCirculation } from "./work-circulation.mjs";
 import { induceUnboundCodexToolBindingDemands, projectCodexToolObservations } from "./codex-tool-observation.mjs";
+
+import { MARSH_EXCHANGE_PROFILE, MARSH_EXCHANGE_PROFILE_ID, LEGACY_EXCHANGE_PROFILE, replayManagedExchange, identifyManagedAction, niDigestHex, exactManagedAccount, managedEventKey } from "./managed-exchange.mjs";
+export { MARSH_EXCHANGE_PROFILE, MARSH_EXCHANGE_PROFILE_ID, LEGACY_EXCHANGE_PROFILE } from "./managed-exchange.mjs";
 
 export const ACTOR = "urn:ame:modeled-union-dimension";
 
@@ -15,6 +18,8 @@ const OPERATION_ABILITY = Object.freeze({
   offerDemand: "semiotic-exchange/offer-demand",
   purchaseMove: "semiotic-exchange/purchase-move",
   settleDemand: "semiotic-exchange/settle-demand",
+  submitDemandResult: "semiotic-exchange/submit-demand-result",
+  receiveDemand: "semiotic-exchange/receive-demand",
 });
 
 function required(value, label) {
@@ -27,7 +32,7 @@ function exactNi(value, label) {
 }
 function same(left, right) { return String(left).toLowerCase() === String(right).toLowerCase(); }
 function find(items, field, value) { return items.find((item) => same(item[field], value)); }
-function chainKey(event) { return `${event.chainPosition.blockNumber.toString()}:${event.chainPosition.logIndex}`; }
+function chainKey(event) { return event.profile === MARSH_EXCHANGE_PROFILE ? managedEventKey(event) : `${event.chainPosition.blockNumber.toString()}:${event.chainPosition.logIndex}`; }
 function before(left, right) {
   const a = BigInt(left.chainPosition.blockNumber), b = BigInt(right.chainPosition.blockNumber);
   return a < b || (a === b && left.chainPosition.logIndex < right.chainPosition.logIndex);
@@ -42,15 +47,27 @@ function identify(value) { return identifyJsonSemanticContent({ objectKind: `mod
 function identifyCarrier(carrier) { return identifyJsonSemanticContent({ objectKind: `semiotic-exchange.${carrier.type}`, value: carrier, witnessRoot: EMPTY_WITNESS_ROOT }).token; }
 
 /** The single carrier boundary consumed by this MUD. */
-export function createCarrierAdmissionReceipt({ carrier, protocolVerificationReceiptNis }) {
+export function createCarrierAdmissionReceipt({ carrier, protocolVerificationReceiptNis, canonicalBytes, contentNi }) {
   if (carrier === null || typeof carrier !== "object" || Array.isArray(carrier)) throw new TypeError("carrier must be one typed decoded relational value");
   required(carrier.type, "carrier.type");
   if (!("value" in carrier)) throw new TypeError("carrier.value is required");
   if (!Array.isArray(protocolVerificationReceiptNis) || protocolVerificationReceiptNis.length === 0) throw new TypeError("at least one protocol verification receipt ni is required");
   const receipts = Object.freeze([...new Set(protocolVerificationReceiptNis.map((ni, index) => exactNi(ni, `protocolVerificationReceiptNis[${index}]`)))].sort());
-  const contentNi = identifyCarrier(carrier);
-  const body = freeze({ type: "CarrierAdmissionReceipt", version: 1, disposition: "admitted", contentNi,
-    carrier: { type: carrier.type, value: structuredClone(carrier.value) }, protocolVerificationReceiptNis: receipts });
+  let version = 1, carrierHex;
+  if (canonicalBytes !== undefined) {
+    if (!(canonicalBytes instanceof Uint8Array) || canonicalBytes.length === 0) throw new TypeError("canonicalBytes must be nonempty canonical SEN bytes");
+    exactNi(contentNi, "contentNi");
+    const canonical = admitJsonSemanticContent({ bytes: canonicalBytes, token: contentNi, objectKind: `semiotic-exchange.${carrier.type}` });
+    if (identify(canonical.value) !== identify(carrier.value)) throw new Error("carrier value differs from its admitted canonical bytes");
+    carrierHex = `0x${Array.from(canonicalBytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+    version = 2;
+  } else {
+    if (contentNi !== undefined) throw new TypeError("explicit contentNi requires canonicalBytes");
+    contentNi = identifyCarrier(carrier);
+  }
+  const body = freeze({ type: "CarrierAdmissionReceipt", version, disposition: "admitted", contentNi,
+    carrier: { type: carrier.type, value: structuredClone(carrier.value) }, protocolVerificationReceiptNis: receipts,
+    ...(version === 2 ? { carrierHex } : {}) });
   return freeze({ id: identify(body), ...body });
 }
 
@@ -58,9 +75,15 @@ function admitCarriers(values) {
   if (!Array.isArray(values)) throw new TypeError("carrierAdmissions must be an array");
   const byContent = new Map();
   for (const [index, value] of values.entries()) {
-    if (value?.type !== "CarrierAdmissionReceipt" || value.version !== 1 || value.disposition !== "admitted") throw new TypeError(`carrierAdmissions[${index}] is not a CarrierAdmissionReceipt v1`);
+    if (value?.type !== "CarrierAdmissionReceipt" || ![1, 2].includes(value.version) || value.disposition !== "admitted") throw new TypeError(`carrierAdmissions[${index}] is not a CarrierAdmissionReceipt v1 or v2`);
     exactNi(value.id, `carrierAdmissions[${index}].id`); exactNi(value.contentNi, `carrierAdmissions[${index}].contentNi`);
-    const canonical = createCarrierAdmissionReceipt({ carrier: value.carrier, protocolVerificationReceiptNis: value.protocolVerificationReceiptNis });
+    let canonicalBytes;
+    if (value.version === 2) {
+      if (!/^0x(?:[0-9a-f]{2})+$/u.test(value.carrierHex ?? "")) throw new TypeError("canonical carrierHex is required for admission v2");
+      canonicalBytes = Uint8Array.from(value.carrierHex.slice(2).match(/../gu), (byte) => Number.parseInt(byte, 16));
+    }
+    const canonical = createCarrierAdmissionReceipt({ carrier: value.carrier, protocolVerificationReceiptNis: value.protocolVerificationReceiptNis,
+      ...(value.version === 2 ? { canonicalBytes, contentNi: value.contentNi } : {}) });
     if (canonical.id !== value.id || canonical.contentNi !== value.contentNi) throw new Error(`carrierAdmissions[${index}] does not match its canonical identity`);
     if (byContent.has(value.contentNi)) throw new Error(`carrier ${value.contentNi} was admitted twice`);
     byContent.set(value.contentNi, canonical);
@@ -93,7 +116,7 @@ function support(locus, federationHistory) {
   }
   return freeze({ positive, negative, charge: readingOfSides("knowledge", positive, negative) });
 }
-function relation(type, from, to, event) { return freeze({ type, from, to, chainPosition: event.chainPosition, carrierNi: event.carrierNi }); }
+function relation(type, from, to, event) { return freeze({ type, from, to, chainPosition: event.chainPosition, ...(event.carrierNi ? { carrierNi: event.carrierNi } : {}), ...(event.profile === MARSH_EXCHANGE_PROFILE ? { profile: event.profile, chainId: event.chainId, exchange: event.exchange, nativePosition: event.nativePosition } : {}) }); }
 function settlementEvidence(federationHistory) {
   const found = [];
   for (const standing of federationHistory) {
@@ -106,52 +129,79 @@ function settlementEvidence(federationHistory) {
   return freeze(found);
 }
 
-function demandInductions(values, demands) {
+function demandInductions(values, demands, { managed = false, bindings = [] } = {}) {
   if (!Array.isArray(values)) throw new TypeError("demandInductionReceipts must be an array");
-  const byDemand = new Map();
-  for (const [index, receipt] of values.entries()) {
+  if (!Array.isArray(bindings)) throw new TypeError("demandInductionBindings must be an array");
+  const selected = new Map();
+  for (const binding of bindings) {
+    exactNi(binding?.receiptNi, "demandInductionBindings.receiptNi");
+    if (!/^0x[0-9a-f]{64}$/u.test(binding.demand ?? "") || selected.has(binding.receiptNi)) throw new TypeError("demand induction bindings require one exact handle per receipt");
+    selected.set(binding.receiptNi, binding.demand);
+  }
+  const byDemand = new Map(), seenReceipts = new Set();
+  for (const [index, input] of values.entries()) {
+    const receipt = structuredClone(input);
     if (receipt?.type !== "SemioticExchangeDemandInductionReceipt" || receipt.version !== 1) throw new TypeError(`demandInductionReceipts[${index}] is not a demand induction receipt v1`);
     exactNi(receipt.id, `demandInductionReceipts[${index}].id`); exactNi(receipt.demandNi, `demandInductionReceipts[${index}].demandNi`);
     if (!(receipt.receiptBytes instanceof Uint8Array)) throw new TypeError(`demandInductionReceipts[${index}].receiptBytes must be canonical RMN bytes`);
-    // The fabricator's receipt bytes are the canonical coordinate. Never trust a parallel projection whose id differs.
     const canonicalReceipt = admitJsonSemanticContent({ bytes: receipt.receiptBytes, token: receipt.id, objectKind: "semiotic-exchange.SemioticExchangeDemandInductionReceipt" }).value;
     for (const field of ["type", "version", "demandNi", "demandBytes32", "groundingDigest", "wantedLawDigest", "causalGraph", "restrictedArena"]) {
       if (identify(canonicalReceipt[field]) !== identify(receipt[field])) throw new Error(`demand induction ${field} differs from its canonical receipt bytes`);
     }
-    const demand = demands.find((candidate) => same(candidate.id, receipt.demandBytes32));
-    if (!demand || demand.raised.carrierNi !== receipt.demandNi || !same(demand.grounding, receipt.groundingDigest) || !same(demand.wantedLaw, receipt.wantedLawDigest)) throw new Error("demand induction receipt is not bound to one witnessed DemandRaised event");
+    const matching = demands.filter((candidate) => same(managed ? candidate.carrierId : candidate.id, receipt.demandBytes32)
+      && candidate.raised.carrierNi === receipt.demandNi && same(candidate.grounding, receipt.groundingDigest) && same(candidate.wantedLaw, receipt.wantedLawDigest));
+    const target = selected.get(receipt.id);
+    const demand = target ? matching.find((candidate) => candidate.id === target) : matching.length === 1 ? matching[0] : null;
+    if (!demand) throw new Error("demand induction receipt must bind one unambiguous witnessed DemandRaised handle");
     if (!Array.isArray(receipt.causalGraph) || !Array.isArray(receipt.restrictedArena)) throw new TypeError("demand induction receipt lacks its settled causal graph and restricted arena");
-    byDemand.set(demand.id.toLowerCase(), freeze(receipt));
+    if (byDemand.has(demand.id.toLowerCase())) throw new Error("Demand already has an induction receipt");
+    byDemand.set(demand.id.toLowerCase(), freeze(receipt)); seenReceipts.add(receipt.id);
   }
+  for (const key of selected.keys()) if (!seenReceipts.has(key)) throw new Error("demand induction binding names an absent receipt");
   return byDemand;
 }
 
-/** Admit residue-to-demand material without treating an off-chain induction as chain history. */
-function capabilityRepairInductions(values) {
+/** Admit residue-to-demand material without treating off-chain induction as history. */
+function capabilityRepairInductions(values, { managed = false } = {}) {
   if (!Array.isArray(values)) throw new TypeError("capabilityDemandInductionReceipts must be an array");
   const byDemand = new Map();
-  for (const [index, receipt] of values.entries()) {
+  for (const [index, input] of values.entries()) {
+    const receipt = structuredClone(input);
     if (receipt?.type !== "CapabilityRepairDemandInductionReceipt" || receipt.version !== 1) throw new TypeError(`capabilityDemandInductionReceipts[${index}] is not a capability repair induction receipt v1`);
     for (const field of ["id", "demandNi", "groundingNi", "wantedLawNi", "residueNi", "inputNi"]) exactNi(receipt[field], `capabilityDemandInductionReceipts[${index}].${field}`);
     if (!/^0x[0-9a-fA-F]{64}$/u.test(receipt.demandBytes32 ?? "") || !/^0x[0-9a-fA-F]{64}$/u.test(receipt.groundingDigest ?? "") || !/^0x[0-9a-fA-F]{64}$/u.test(receipt.wantedLawDigest ?? "")) throw new TypeError(`capabilityDemandInductionReceipts[${index}] lacks exact SXC coordinates`);
     if (!(receipt.receiptBytes instanceof Uint8Array)) throw new TypeError(`capabilityDemandInductionReceipts[${index}].receiptBytes must be canonical RMN bytes`);
     const canonical = admitJsonSemanticContent({ bytes: receipt.receiptBytes, token: receipt.id, objectKind: "semiotic-exchange.CapabilityRepairDemandInductionReceipt" }).value;
     for (const field of ["type", "version", "raiser", "demandNi", "demandBytes32", "groundingNi", "groundingDigest", "wantedLawNi", "wantedLawDigest", "residueNi", "inputNi", "refusalWitnessNis", "market", "raiseDemand"]) if (identify(canonical[field]) !== identify(receipt[field])) throw new Error(`capability repair induction ${field} differs from its canonical receipt bytes`);
-    if (byDemand.has(receipt.demandBytes32.toLowerCase())) throw new Error("capability repair demand was inducted twice");
-    byDemand.set(receipt.demandBytes32.toLowerCase(), freeze(receipt));
+    if (managed) {
+      exactManagedAccount(receipt.raiser.toLowerCase(), "induction.raiser");
+      if (niDigestHex(receipt.demandNi) !== receipt.demandBytes32.toLowerCase()) throw new Error("induction carrier digest differs from demandNi");
+      if (!Array.isArray(receipt.raiseDemand?.args) || receipt.raiseDemand.operation !== "raiseDemand" || receipt.raiseDemand.args.length !== 3
+        || !/^0x(?:[0-9a-f]{2})+$/u.test(receipt.raiseDemand.args[0])) throw new Error("induction lacks its exact raiseDemand arguments");
+      const carrier = Uint8Array.from(receipt.raiseDemand.args[0].slice(2).match(/../gu), (byte) => Number.parseInt(byte, 16));
+      if (makeNiUri(carrier) !== receipt.demandNi || !same(receipt.raiseDemand.args[1], receipt.groundingDigest) || !same(receipt.raiseDemand.args[2], receipt.wantedLawDigest)) throw new Error("induction call arguments differ from canonical demand coordinates");
+    }
+    const key = managed ? `${receipt.raiser.toLowerCase()}:${receipt.demandBytes32.toLowerCase()}:${receipt.groundingDigest.toLowerCase()}:${receipt.wantedLawDigest.toLowerCase()}` : receipt.demandBytes32.toLowerCase();
+    if (byDemand.has(key)) throw new Error("capability repair demand was inducted twice");
+    byDemand.set(key, freeze(receipt));
   }
   return byDemand;
 }
-
-function capabilityMetabolism(inductions, demands, offers, federationHistory) {
+function inducedDemand(induction, demands, managed) {
+  const matches = demands.filter((candidate) => same(managed ? candidate.carrierId : candidate.id, induction.demandBytes32)
+    && (!managed || same(candidate.raiser, induction.raiser) && same(candidate.grounding, induction.groundingDigest) && same(candidate.wantedLaw, induction.wantedLawDigest)));
+  if (matches.length > 1) throw new Error("capability induction is ambiguous across governed Demand handles");
+  return matches[0] ?? null;
+}
+function capabilityMetabolism(inductions, demands, offers, federationHistory, managed = false) {
   return freeze([...inductions.entries()].map(([key, induction]) => {
-    const demand = demands.find((candidate) => same(candidate.id, key)) ?? null;
+    const demand = inducedDemand(induction, demands, managed);
     if (demand && (!same(demand.raiser, induction.raiser) || !same(demand.wantedLaw, induction.wantedLawDigest) || !same(demand.grounding, induction.groundingDigest) || demand.raised.carrierNi !== induction.demandNi)) throw new Error("capability repair induction is displaced from its witnessed DemandRaised move");
     const demandOffers = demand === null ? [] : offers.filter((offer) => same(offer.demand, demand.id));
     const attempts = [];
     for (const standing of federationHistory) {
       const attempt = standing.object;
-      if (attempt?.type !== "CapabilityProviderAttemptReceipt" || attempt.version !== 1 || !same(attempt.demand, induction.demandBytes32)) continue;
+      if (attempt?.type !== "CapabilityProviderAttemptReceipt" || attempt.version !== 1 || !same(attempt.demand, managed ? demand?.id : induction.demandBytes32)) continue;
       const offer = demandOffers.find((candidate) => same(candidate.id, attempt.offer));
       if (!offer || !same(offer.controller, attempt.provider) || !["refused", "completed"].includes(attempt.outcome)) throw new Error("capability provider attempt is not grounded in a witnessed offer");
       if (attempt.outcome === "refused") {
@@ -163,24 +213,45 @@ function capabilityMetabolism(inductions, demands, offers, federationHistory) {
       }
       attempts.push(freeze({ ...attempt, evidenceNi: standing.objectNi, federationCarrierAdmissionReceiptNis: standing.witnesses, charge: standing.support.value }));
     }
-    const closes = demand?.settlement && attempts.some((attempt) => attempt.outcome === "completed" && same(attempt.result, demand.settlement.result) && same(attempt.offer, demand.purchase?.offer));
-    return freeze({ type: "CapabilityRepairDemandLocus", id: key, demandNi: induction.demandNi, residueNi: induction.residueNi, inputNi: induction.inputNi, wantedLaw: induction.wantedLawDigest, market: induction.market, phase: closes ? "succeeded" : demand === null ? "ready-to-raise" : demand.purchase ? "purchased" : "open", grayDegree: closes ? "stable" : "active", obstruction: closes ? null : freeze({ residueNi: induction.residueNi, reason: demand === null ? "demand-not-yet-witnessed-on-chain" : "no-positive-settled-provider-receipt" }), raiseDemand: demand === null ? induction.raiseDemand : null, offers: freeze(demandOffers.map((offer) => freeze({ id: offer.id, cell: offer.cell, provider: offer.controller, phase: offer.purchase ? "purchased" : "offered" }))), attempts: freeze(attempts) });
+    const accepted = managed ? demand?.receiving : demand?.settlement;
+    const closes = Boolean(accepted && attempts.some((attempt) => attempt.outcome === "completed" && same(attempt.result, accepted.result) && same(attempt.offer, demand.purchase?.offer)));
+    return freeze({ type: "CapabilityRepairDemandLocus", id: managed ? demand?.id ?? induction.id : key,
+      ...(managed ? { profile: MARSH_EXCHANGE_PROFILE, demand: demand?.id ?? null, demandBytes32: induction.demandBytes32, exchangePhase: demand?.phase ?? null, submission: demand?.submission ?? null, receiving: demand?.receiving ?? null } : {}),
+      demandNi: induction.demandNi, residueNi: induction.residueNi, inputNi: induction.inputNi, wantedLaw: induction.wantedLawDigest, market: induction.market,
+      phase: closes ? "succeeded" : demand === null ? "ready-to-raise" : managed && demand.submission ? "submitted" : demand.purchase ? "purchased" : "open",
+      grayDegree: closes ? "stable" : "active", obstruction: closes ? null : freeze({ residueNi: induction.residueNi, reason: demand === null ? "demand-not-yet-witnessed-on-chain" : managed ? "no-requester-received-matching-provider-result" : "no-positive-settled-provider-receipt" }),
+      raiseDemand: demand === null ? induction.raiseDemand : null, offers: freeze(demandOffers.map((offer) => freeze({ id: offer.id, cell: offer.cell, provider: offer.controller, phase: offer.purchase ? "purchased" : "offered" }))), attempts: freeze(attempts) });
   }));
 }
-
+function canonicalAuthorityReceipt(receipt, objectKind) {
+  if (!receipt || !isNiUri(receipt.id)) return false;
+  const { id, ...body } = receipt;
+  try { return identifyJsonSemanticContent({ objectKind, value: body, witnessRoot: EMPTY_WITNESS_ROOT }).token === id; }
+  catch { return false; }
+}
 function authorityPair(action, authorityReceipts) {
   const ucans = authorityReceipts?.ucan ?? [], bindings = authorityReceipts?.controllerBindings ?? [];
   if (!Array.isArray(ucans) || !Array.isArray(bindings)) throw new TypeError("authorityReceipts must contain ucan and controllerBindings arrays");
-  const ability = OPERATION_ABILITY[action.operation];
-  const ucan = ucans.find((receipt) => receipt?.type === "UcanInvocationVerificationReceipt" && receipt.version === 1
-    && receipt.disposition === "authorized" && receipt.revocationStatus === "active" && receipt.capability?.can === ability && isNiUri(receipt.id));
-  if (!ucan) return null;
-  const binding = bindings.find((receipt) => receipt?.type === "EnterpriseAccountControllerBindingReceipt" && receipt.version === 1
-    && receipt.disposition === "bound" && receipt.protocol === "ERC-1271" && isNiUri(receipt.id)
-    && receipt.controller === ucan.controller && receipt.actor === ucan.actor && receipt.invocationCid === ucan.invocationCid
-    && receipt.delegationCid === ucan.delegationCid && receipt.capabilityNi === ucan.capabilityNi
-    && isNiUri(ucan.capabilityNi) && same(receipt.resource, ucan.capability?.with));
-  return binding ? freeze({ ucanInvocationVerificationReceiptNi: ucan.id, enterpriseAccountControllerBindingReceiptNi: binding.id }) : null;
+  const ability = OPERATION_ABILITY[action.operation], managed = action.profile === MARSH_EXCHANGE_PROFILE;
+  const resource = managed ? `did:pkh:${action.chainId}:${action.actor}` : null;
+  for (const ucan of ucans) {
+    if (!(ucan?.type === "UcanInvocationVerificationReceipt" && ucan.version === 1 && ucan.disposition === "authorized"
+      && ucan.revocationStatus === "active" && ucan.capability?.can === ability && isNiUri(ucan.id))) continue;
+    if (managed && (!canonicalAuthorityReceipt(ucan, "animating.ucan-semantic-material")
+      || identifyJsonSemanticContent({ objectKind: "animating.ucan-semantic-material", value: ucan.capability, witnessRoot: EMPTY_WITNESS_ROOT }).token !== ucan.capabilityNi || ucan.capability.with !== resource
+      || ucan.capability.nb?.marshProfile !== MARSH_EXCHANGE_PROFILE || ucan.capability.nb?.marshExchange !== action.exchange
+      || ucan.capability.nb?.marshActionId !== action.id)) continue;
+    const binding = bindings.find((receipt) => receipt?.type === "EnterpriseAccountControllerBindingReceipt" && receipt.version === 1
+      && receipt.disposition === "bound" && receipt.protocol === "ERC-1271" && isNiUri(receipt.id)
+      && receipt.controller === ucan.controller && receipt.actor === ucan.actor && receipt.invocationCid === ucan.invocationCid
+      && receipt.delegationCid === ucan.delegationCid && receipt.capabilityNi === ucan.capabilityNi && isNiUri(ucan.capabilityNi)
+      && same(receipt.resource, ucan.capability?.with)
+      && (!managed || canonicalAuthorityReceipt(receipt, "ethereum.enterprise-account-controller-binding")
+        && receipt.account === action.actor && receipt.chain === action.chainId && receipt.resource === resource
+        && receipt.rmnSemanticDigest === action.actionDigest && identify(receipt.capability) === identify(ucan.capability)));
+    if (binding) return freeze({ ucanInvocationVerificationReceiptNi: ucan.id, enterpriseAccountControllerBindingReceiptNi: binding.id });
+  }
+  return null;
 }
 
 function admitMissionLaw(value) {
@@ -253,10 +324,17 @@ function projectWorkspaceContentFoam(admissions) {
 }
 
 /** Reconstruct one MUD from monotone SemioticExchange history plus admitted evidence. */
-export function createModeledUnionDimension({ witnessed, events = witnessed, chainId, exchange, carrierAdmissions = [], federationHistory = [], demandInductionReceipts = [], capabilityDemandInductionReceipts = [], authorityReceipts = {}, observerFamily = null, missionLaw = null, actuator = null, deploymentActuator = null, notebookQueryReceipts = [], notebookQueryActuator = null, notebookQueryAvailability = null } = {}) {
+export function createModeledUnionDimension({ witnessed, events = witnessed, chainId, exchange, profile, carrierAdmissions = [], federationHistory = [], demandInductionReceipts = [], demandInductionBindings = [], capabilityDemandInductionReceipts = [], authorityReceipts = {}, observerFamily = null, missionLaw = null, actuator = null, deploymentActuator = null, notebookQueryReceipts = [], notebookQueryActuator = null, notebookQueryAvailability = null } = {}) {
   if (!Array.isArray(events)) throw new TypeError("events must be an array of witnessed SemioticExchange moves");
   required(chainId, "chainId"); required(exchange, "exchange");
-  const admissions = admitCarriers(carrierAdmissions), admittedFederationHistory = admitFederationHistory(federationHistory), ordered = [...events];
+  profile ??= events[0]?.profile ?? LEGACY_EXCHANGE_PROFILE;
+  if (![MARSH_EXCHANGE_PROFILE, LEGACY_EXCHANGE_PROFILE].includes(profile)) throw new TypeError("unknown exchange history profile");
+  const managed = profile === MARSH_EXCHANGE_PROFILE;
+  const managedHistory = managed ? replayManagedExchange(events, { chainId, exchange }) : null;
+  if (!managed && events.some((event) => event?.profile !== undefined && event.profile !== LEGACY_EXCHANGE_PROFILE)) throw new Error("legacy and managed histories cannot be mixed");
+  const admissions = admitCarriers(carrierAdmissions), admittedFederationHistory = admitFederationHistory(federationHistory);
+  const ordered = managed ? managedHistory.ordered : events.map((event) => freeze({ ...structuredClone(event), profile: LEGACY_EXCHANGE_PROFILE }));
+  authorityReceipts = freeze(structuredClone(authorityReceipts));
   const territoryAdmissions = [...admissions.values()].filter(({ carrier }) => carrier.type === "NodeWorkspaceSourceCatalogReceipt");
   if (territoryAdmissions.length > 1) throw new Error("more than one canonical codebase territory was admitted");
   if (observerFamily !== null && territoryAdmissions.length !== 1) throw new Error("observerFamily requires exactly one admitted NodeWorkspaceSourceCatalogReceipt");
@@ -265,14 +343,14 @@ export function createModeledUnionDimension({ witnessed, events = witnessed, cha
   const admittedMissionLaw = admitMissionLaw(missionLaw);
   const notebookCatalogAdmissions = [...admissions.values()].filter(({ carrier }) => carrier.type === "NotebookLMLibraryCatalogReceipt");
   const lSpace = notebookCatalogAdmissions.length === 0 ? null : projectLSpace({ catalogAdmissions: notebookCatalogAdmissions, queryReceipts: notebookQueryReceipts, queryActuator: notebookQueryActuator, queryAvailability: notebookQueryAvailability });
-  for (let index = 0; index < ordered.length; index += 1) {
+  for (let index = 0; !managed && index < ordered.length; index += 1) {
     const event = ordered[index];
     if (!KINDS.includes(event?.kind)) throw new TypeError(`events[${index}] is not a SemioticExchange move`);
     if (!event.chainPosition || event.chainPosition.blockNumber === undefined || !Number.isInteger(event.chainPosition.logIndex)) throw new TypeError(`events[${index}] has no exact chain position`);
     if (index > 0 && !before(ordered[index - 1], event)) throw new Error("SemioticExchange history is not in strict chain order");
   }
-  const cells = [], demands = [], offers = [], relations = [];
-  for (const event of ordered) {
+  const cells = managedHistory?.cells ?? [], demands = managedHistory?.demands ?? [], offers = managedHistory?.offers ?? [], relations = managedHistory?.relations ?? [];
+  for (const event of managed ? [] : ordered) {
     if (event.kind === "CellSeated") {
       if (find(cells, "id", event.cell)) throw new Error(`cell ${event.cell} was seated twice`);
       cells.push({ type: "SemioticCellLocus", id: event.cell, controller: event.controller, law: event.law, seated: event, retired: null });
@@ -308,62 +386,89 @@ export function createModeledUnionDimension({ witnessed, events = witnessed, cha
       demand.settlement = event; relations.push(relation("settles", `cell:${cell.id}`, `demand:${demand.id}`, event)); relations.push(relation("resultsIn", `demand:${demand.id}`, event.result, event));
     }
   }
-  const inductions = demandInductions(demandInductionReceipts, demands);
-  const capabilityInductions = capabilityRepairInductions(capabilityDemandInductionReceipts);
-  const capabilityDemands = capabilityMetabolism(capabilityInductions, demands, offers, admittedFederationHistory);
+  const inductions = demandInductions(demandInductionReceipts, demands, { managed, bindings: demandInductionBindings });
+  const capabilityInductions = capabilityRepairInductions(capabilityDemandInductionReceipts, { managed });
+  const capabilityDemands = capabilityMetabolism(capabilityInductions, demands, offers, admittedFederationHistory, managed);
   const workCirculation = projectWorkCirculation({ admissions, demands, offers, federationHistory: admittedFederationHistory });
   const codexToolObservations = projectCodexToolObservations({ admissions });
   const loci = freeze([
     ...cells.map((cell) => ({ ...cell, phase: cell.retired ? "retired" : "seated", support: support(cell.id, admittedFederationHistory) })),
-    ...demands.map((demand) => ({ ...demand, phase: demand.settlement ? "settled" : demand.purchase ? "purchased" : "raised", support: support(demand.id, admittedFederationHistory), inductionReceiptNi: inductions.get(demand.id.toLowerCase())?.id ?? null })),
+    ...demands.map((demand) => ({ ...demand, phase: managed ? demand.phase : demand.settlement ? "settled" : demand.purchase ? "purchased" : "raised", support: support(demand.id, admittedFederationHistory), inductionReceiptNi: inductions.get(demand.id.toLowerCase())?.id ?? null })),
     ...offers.map((offer) => ({ ...offer, phase: offer.purchase ? "purchased" : "offered", support: support(offer.id, admittedFederationHistory) })),
   ]);
   const eventRelations = ordered.slice(1).map((event, index) => relation("causallyFollows", `event:${chainKey(event)}`, `event:${chainKey(ordered[index])}`, event));
 
   function restrictedArena(actor) {
-    required(actor, "actor"); const candidates = [];
-    for (const [demandId, induction] of capabilityInductions) if (!demands.some((demand) => same(demand.id, demandId)) && same(induction.raiser, actor)) candidates.push({ operation: "raiseDemand", demand: demandId, carrierNi: induction.demandNi, raiseDemand: induction.raiseDemand, capabilityDemandInductionReceiptNi: induction.id });
+    required(actor, "actor"); if (managed) exactManagedAccount(actor);
+    const candidates = [];
+    for (const [key, induction] of capabilityInductions) if (!inducedDemand(induction, demands, managed) && same(induction.raiser, actor)) {
+      candidates.push({ operation: "raiseDemand", ...(managed ? { demandBytes32: induction.demandBytes32, grounding: induction.groundingDigest, wantedLaw: induction.wantedLawDigest, args: [...induction.raiseDemand.args], carrierRequired: false } : { demand: key }), carrierNi: induction.demandNi, raiseDemand: induction.raiseDemand, capabilityDemandInductionReceiptNi: induction.id });
+    }
     for (const cell of cells.filter((candidate) => !candidate.retired && same(candidate.controller, actor))) {
-      candidates.push({ operation: "retireCell", cell: cell.id });
+      candidates.push({ operation: "retireCell", cell: cell.id, ...(managed ? { expectedSequence: cell.resourceState.sequence, args: [cell.id, cell.resourceState.sequence], carrierRequired: false } : {}) });
       for (const demand of demands.filter((candidate) => !candidate.purchase && !candidate.settlement && same(candidate.wantedLaw, cell.law))) {
-        if (offers.some((offer) => same(offer.demand, demand.id) && same(offer.cell, cell.id))) continue;
+        // A managed Offer is a carrier/joins identity: a later distinct Offer
+        // from this reusable Cell is permitted while the Demand remains Open.
+        if (!managed && offers.some((offer) => same(offer.demand, demand.id) && same(offer.cell, cell.id))) continue;
         const qualification = workCirculation.qualification(actor, demand.id);
         if (qualification !== null && !qualification.qualified) continue;
-        candidates.push({ operation: "offerDemand", demand: demand.id, cell: cell.id, ...(qualification?.evidence ? { workQualificationEvidenceNi: qualification.evidence.evidenceNi } : {}) });
+        candidates.push({ operation: "offerDemand", demand: demand.id, cell: cell.id,
+          ...(managed ? { expectedDemandSequence: demand.resourceState.sequence, expectedCellSequence: cell.resourceState.sequence, args: [demand.id, demand.resourceState.sequence, cell.id, cell.resourceState.sequence], carrierRequired: true } : {}),
+          ...(qualification?.evidence ? { workQualificationEvidenceNi: qualification.evidence.evidenceNi } : {}) });
       }
     }
-    for (const demand of demands.filter((candidate) => !candidate.purchase && same(candidate.raiser, actor))) for (const offer of offers.filter((candidate) => same(candidate.demand, demand.id) && !candidate.purchase)) candidates.push({ operation: "purchaseMove", demand: demand.id, offer: offer.id, cell: offer.cell });
-    for (const demand of demands.filter((candidate) => candidate.purchase && !candidate.settlement)) { const cell = find(cells, "id", demand.purchase.cell); if (cell && same(cell.controller, actor)) candidates.push({ operation: "settleDemand", demand: demand.id, cell: cell.id }); }
+    for (const demand of demands.filter((candidate) => !candidate.purchase && same(candidate.raiser, actor))) {
+      for (const offer of offers.filter((candidate) => same(candidate.demand, demand.id) && !candidate.purchase)) {
+        const cell = find(cells, "id", offer.cell);
+        if (managed && (!cell || cell.retired)) continue;
+        candidates.push({ operation: "purchaseMove", demand: demand.id, offer: offer.id, cell: offer.cell,
+          ...(managed ? { expectedDemandSequence: demand.resourceState.sequence, expectedCellSequence: cell.resourceState.sequence, args: [demand.id, demand.resourceState.sequence, offer.id, cell.resourceState.sequence], carrierRequired: false } : {}) });
+      }
+    }
+    for (const demand of demands.filter((candidate) => candidate.purchase)) {
+      const cell = find(cells, "id", demand.purchase.cell);
+      if (managed) {
+        if (demand.phase === "Selected" && cell && same(cell.controller, actor)) candidates.push({ operation: "submitDemandResult", demand: demand.id, offer: demand.purchase.offer, cell: cell.id, expectedSequence: demand.resourceState.sequence, args: [demand.id, demand.resourceState.sequence, demand.purchase.offer], carrierRequired: true });
+        if (demand.phase === "Submitted" && same(demand.raiser, actor)) candidates.push({ operation: "receiveDemand", demand: demand.id, offer: demand.purchase.offer, cell: demand.purchase.cell, result: demand.submission.result, expectedSequence: demand.resourceState.sequence, args: [demand.id, demand.resourceState.sequence, demand.purchase.offer, demand.submission.result], carrierRequired: true });
+      } else if (!demand.settlement && cell && same(cell.controller, actor)) candidates.push({ operation: "settleDemand", demand: demand.id, cell: cell.id });
+    }
     for (const [demandId, induction] of inductions) for (const move of induction.restrictedArena) {
       const graph = induction.causalGraph.find(({ id }) => id === move.prerequisite);
       if (move.evidenceSide !== "positive" || graph?.blockedBy?.length) continue;
-      candidates.push({ operation: move.prerequisite === "private-live-mud" ? "deployPrivateLiveMud" : "admitPrerequisiteEvidence", demand: demandId, prerequisite: move.prerequisite, postcondition: move.postcondition, completionWitness: move.completionWitness, demandInductionReceiptNi: induction.id });
+      candidates.push({ operation: move.prerequisite === "private-live-mud" ? "deployPrivateLiveMud" : "admitPrerequisiteEvidence", demand: demandId, prerequisite: move.prerequisite, postcondition: move.postcondition, completionWitness: move.completionWitness, demandInductionReceiptNi: induction.id, ...(managed ? { args: [], carrierRequired: false } : {}) });
     }
     const actions = candidates.map((candidate) => {
-      const id = identify({ type: "RestrictedModeledUnionAction", actor, ...candidate });
-      if (candidate.operation === "deployPrivateLiveMud") return { type: "SemioticExchangeAction", id, ...candidate, polarity: "positive", available: typeof deploymentActuator === "function", ...(typeof deploymentActuator === "function" ? {} : { unavailability: "private-deployment-actuator-unavailable" }), evidence: { demandInductionReceiptNi: candidate.demandInductionReceiptNi } };
-      if (candidate.operation === "admitPrerequisiteEvidence") return { type: "SemioticExchangeAction", id, ...candidate, polarity: "positive", available: false, unavailability: "canonical-evidence-observation-required", evidence: { demandInductionReceiptNi: candidate.demandInductionReceiptNi } };
-      const pair = authorityPair(candidate, authorityReceipts), relevantNis = [
+      const context = managed ? { profile, profileId: MARSH_EXCHANGE_PROFILE_ID, chainId, exchange,
+        checkpoint: managedHistory.checkpoint, historyNi: managedHistory.historyNi,
+        observedResources: [...new Set([candidate.cell, candidate.demand, candidate.offer].filter(Boolean))].sort().map((resource) => managedHistory.resources.get(resource)).filter(Boolean) } : {};
+      const identity = { type: "RestrictedModeledUnionAction", actor, ...context, ...candidate };
+      const identified = managed ? identifyManagedAction(identity) : { id: identify(identity) };
+      const action = { type: "SemioticExchangeAction", ...context, actor, ...candidate, ...identified, polarity: "positive" };
+      if (candidate.operation === "deployPrivateLiveMud") return { ...action, available: typeof deploymentActuator === "function", ...(typeof deploymentActuator === "function" ? {} : { unavailability: "private-deployment-actuator-unavailable" }), evidence: { demandInductionReceiptNi: candidate.demandInductionReceiptNi } };
+      if (candidate.operation === "admitPrerequisiteEvidence") return { ...action, available: false, unavailability: "canonical-evidence-observation-required", evidence: { demandInductionReceiptNi: candidate.demandInductionReceiptNi } };
+      const pair = authorityPair(action, authorityReceipts), relevantNis = [...new Set([
         candidate.carrierNi,
         candidate.cell && find(cells, "id", candidate.cell)?.seated.carrierNi,
         candidate.demand && find(demands, "id", candidate.demand)?.raised.carrierNi,
         candidate.offer && find(offers, "id", candidate.offer)?.offered.carrierNi,
-      ].filter(Boolean);
+        managed && candidate.operation === "receiveDemand" && find(demands, "id", candidate.demand)?.submission.carrierNi,
+      ].filter(Boolean))];
       const carrierReceiptNis = relevantNis.map((ni) => admissions.get(ni)?.id).filter(Boolean);
       const fullyAdmitted = carrierReceiptNis.length === relevantNis.length;
       const available = fullyAdmitted && pair !== null && typeof actuator === "function";
-      return { type: "SemioticExchangeAction", id, ...candidate, polarity: "positive", available,
-        ...(!fullyAdmitted ? { unavailability: "carrier-admission-required" } : !pair ? { unavailability: "authority-receipts-required" } : typeof actuator !== "function" ? { unavailability: "zero-custody-append-actuator-unavailable" } : {}),
+      return { ...action, available,
+        ...(!fullyAdmitted ? { unavailability: "carrier-admission-required" } : !pair ? { unavailability: "authority-receipts-required" } : typeof actuator !== "function" ? { unavailability: managed ? "managed-exchange-actuator-unavailable" : "zero-custody-append-actuator-unavailable" } : {}),
         evidence: { carrierAdmissionReceiptNis: freeze(carrierReceiptNis), ...(pair ?? {}) } };
     });
-    return freeze({ type: "RestrictedModeledUnionArena", actor, actions });
+    return freeze({ type: "RestrictedModeledUnionArena", actor, ...(managed ? { profile, chainId, exchange, checkpoint: managedHistory.checkpoint, historyNi: managedHistory.historyNi } : {}), actions });
   }
-  async function actuate(actionId, actor) {
+
+  async function actuate(actionId, actor, input = {}) {
     const action = restrictedArena(actor).actions.find(({ id }) => id === actionId);
     if (!action) throw Object.assign(new Error("action is not in the actor's current restricted arena"), { code: "MUD_ACTION_NOT_RESTRICTED", status: 403 });
     if (!action.available) throw Object.assign(new Error(action.unavailability), { code: "MUD_ACTION_UNAVAILABLE", status: 409 });
     if (action.operation === "deployPrivateLiveMud") return deploymentActuator(action);
-    return actuator(action);
+    return actuator(action, input);
   }
   function restrictedWorkArena(actor) {
     const workDemandIds = new Set(workCirculation.workLoci.map(({ id }) => String(id).toLowerCase()));
@@ -377,7 +482,7 @@ export function createModeledUnionDimension({ witnessed, events = witnessed, cha
     ...capabilityDemands,
     ...workCirculation.loci,
     ...codexToolObservations,
-    ...workCirculation.loci.flatMap((locus) => locus.cultivation),
+    ...workCirculation.workLoci.flatMap((locus) => locus.cultivation),
     ...(lSpace === null ? [] : lSpace.presentation.loci),
   ]);
   const projectedRelations = freeze([...relations, ...eventRelations, ...workCirculation.relations, ...(territoryFoam?.relations ?? []), ...(contentFoam?.relations ?? [])]);
@@ -385,6 +490,6 @@ export function createModeledUnionDimension({ witnessed, events = witnessed, cha
     restrictedLSpaceArena: (actor, request) => lSpace === null ? freeze({ type: "RestrictedLSpaceArena", actor, actions: [] }) : lSpace.restrictedArena(actor, request),
     queryLSpace: async (request) => { if (lSpace === null) throw Object.assign(new Error("no witnessed L-space catalog is admitted"), { code: "MUD_LSPACE_UNAVAILABLE", status: 409 }); return lSpace.query(request); },
     induceUnboundCodexToolBindingDemands: ({ raiser, induceDemand }) => induceUnboundCodexToolBindingDemands({ raiser, observationLoci: codexToolObservations, induceDemand }),
-    presentation: () => freeze({ type: "ModeledUnionDimensionPresentation", version: 7, ledger: { chainId, exchange }, missionLaw: admittedMissionLaw, events: ordered, loci: projectedLoci, relations: projectedRelations, territoryFoam, contentFoam, lSpace: lSpace?.presentation ?? null, workCirculation: { loci: workCirculation.loci, operation: "project-work-circulation" }, capabilityDemandMetabolism: capabilityDemands, carrierAdmissionReceiptNis: freeze([...admissions.values()].map(({ id }) => id)), federationCarrierAdmissionReceiptNis: freeze(admittedFederationHistory.flatMap(({ witnesses }) => witnesses)), demandInductionReceiptNis: freeze([...inductions.values()].map(({ id }) => id)), capabilityDemandInductionReceiptNis: freeze([...capabilityInductions.values()].map(({ id }) => id)), x402SettlementEvidence: settlementEvidence(admittedFederationHistory) }),
+    presentation: () => freeze({ type: "ModeledUnionDimensionPresentation", version: managed ? 8 : 7, ledger: { profile, chainId, exchange, ...(managed ? { profileId: MARSH_EXCHANGE_PROFILE_ID, checkpoint: managedHistory.checkpoint, historyNi: managedHistory.historyNi } : {}) }, missionLaw: admittedMissionLaw, events: ordered, loci: projectedLoci, relations: projectedRelations, territoryFoam, contentFoam, lSpace: lSpace?.presentation ?? null, workCirculation: { loci: workCirculation.loci, operation: "project-work-circulation" }, capabilityDemandMetabolism: capabilityDemands, carrierAdmissionReceiptNis: freeze([...admissions.values()].map(({ id }) => id)), federationCarrierAdmissionReceiptNis: freeze(admittedFederationHistory.flatMap(({ witnesses }) => witnesses)), demandInductionReceiptNis: freeze([...inductions.values()].map(({ id }) => id)), capabilityDemandInductionReceiptNis: freeze([...capabilityInductions.values()].map(({ id }) => id)), x402SettlementEvidence: settlementEvidence(admittedFederationHistory) }),
     loci: () => projectedLoci, relations: () => projectedRelations, territoryFoam: () => territoryFoam, contentFoam: () => contentFoam, lSpace: () => lSpace?.presentation ?? null, codexToolObservations: () => freeze({ type: "CodexToolObservationPresentation", version: 1, providerCell: "urn:ame:codex-session-activity-provider:tool-observation", loci: codexToolObservations, authority: { observation: true, execution: false, restrictedMove: false, actuatorBinding: false, outcomeAssertion: false } }), workCirculation: () => freeze({ type: "WorkCirculationPresentation", version: 1, loci: workCirculation.loci, relations: workCirculation.relations }) });
 }
