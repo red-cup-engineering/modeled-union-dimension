@@ -1,5 +1,5 @@
 import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 
 import { MARSH_EXCHANGE_PROFILE } from "./managed-exchange.mjs";
 
