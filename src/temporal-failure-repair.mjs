@@ -1,4 +1,4 @@
-import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 
 function ni(value, label) {
   if (!isNiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`);

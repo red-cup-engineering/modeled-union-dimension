@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/typed-computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension, induceTemporalFailureRepairMoves } from "../src/index.mjs";
 import {
   inducePrivateLiveMudDemand,
   PRIVATE_LIVE_MUD_REQUIREMENTS,
-} from "@red-cup-engineering/semiotic-exchange-chain-services-section/semiotic-exchange-demand-induction";
-import { induceCapabilityRepairDemand } from "@red-cup-engineering/semiotic-exchange-chain-services-section/semiotic-exchange-demand-induction";
-import { scanTemporalFailureMarks } from "@red-cup-engineering/computer-systems-fabrication-engineering-services-section/scan-temporal-failure-marks";
-import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+} from "@red-cup-engineering/semiotic-exchange-chain-computer-system-engineering-services-section/semiotic-exchange-demand-induction";
+import { induceCapabilityRepairDemand } from "@red-cup-engineering/semiotic-exchange-chain-computer-system-engineering-services-section/semiotic-exchange-demand-induction";
+import { scanTemporalFailureMarks } from "@red-cup-engineering/computer-systems-fabrication-life-cycle-engineering-services-section/scan-temporal-failure-marks";
+import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 
 const exchange = "0x98bBC65824962b61dF876A47B5779C4EcBBD4939";
 const controller = "0x08E4B3bc9ef76b403879C0eC372d1Fd146E3a07B";

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/typed-computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension, createWorkCarrier, deriveCultivationDemandCarrier } from "../src/index.mjs";
-import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 
 const ni = (value) => makeNiUri(Buffer.from(value, "utf8"));
 const id = (byte) => `0x${byte.repeat(64)}`;

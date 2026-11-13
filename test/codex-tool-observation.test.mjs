@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension } from "../src/index.mjs";
-import { induceCapabilityRepairDemand } from "@red-cup-engineering/semiotic-exchange-chain-services-section/semiotic-exchange-demand-induction";
-import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+import { induceCapabilityRepairDemand } from "@red-cup-engineering/semiotic-exchange-chain-computer-system-engineering-services-section/semiotic-exchange-demand-induction";
+import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 
 const ni = (value) => makeNiUri(Buffer.from(value, "utf8"));
 const sha = (label) => `sha256:${createHash("sha256").update(label).digest("hex")}`;

@@ -4,10 +4,10 @@ import test from "node:test";
 import {
   EMPTY_WITNESS_ROOT, identifyJsonSemanticContent, decodeSemanticEnvelope,
   admitJsonSemanticContent,
-} from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
+} from "@red-cup-engineering/typed-computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 import {
   induceCapabilityRepairDemand, inducePrivateLiveMudDemand, PRIVATE_LIVE_MUD_REQUIREMENTS,
-} from "@red-cup-engineering/semiotic-exchange-chain-services-section/semiotic-exchange-demand-induction";
+} from "@red-cup-engineering/semiotic-exchange-chain-computer-system-engineering-services-section/semiotic-exchange-demand-induction";
 import {
   createModeledUnionDimension, createCarrierAdmissionReceipt, createWorkCarrier,
   MARSH_EXCHANGE_PROFILE, MARSH_EXCHANGE_PROFILE_ID, LEGACY_EXCHANGE_PROFILE,

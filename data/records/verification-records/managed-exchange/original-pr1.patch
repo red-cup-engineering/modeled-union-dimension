@@ -6,14 +6,14 @@ diff --git a/package.json b/package.json
      "@red-cup-engineering/computer-data-engineering-services-section": "workspace:*",
      "@red-cup-engineering/metrologic": "workspace:*",
 -    "@red-cup-engineering/computer-content-address-engineering-services-section": "workspace:*",
-     "@red-cup-engineering/uri-services-section": "workspace:*"
+     "@red-cup-engineering/uri-engineering-services-section": "workspace:*"
    }
  }
 diff --git a/src/codex-tool-observation.mjs b/src/codex-tool-observation.mjs
 --- a/src/codex-tool-observation.mjs
 +++ b/src/codex-tool-observation.mjs
 @@ -1,5 +1,5 @@
- import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 -import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  
@@ -24,7 +24,7 @@ diff --git a/src/dimension.mjs b/src/dimension.mjs
 +++ b/src/dimension.mjs
 @@ -1,6 +1,6 @@
  import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
- import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 -import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  import { projectTerritoryFoam } from "./foam-field.mjs";
@@ -36,7 +36,7 @@ diff --git a/src/foam-field.mjs b/src/foam-field.mjs
 @@ -1,7 +1,7 @@
  import { fixedSet, readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
  import { closureMonadReceipt, knowledgeJoinClosure } from "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber";
- import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 -import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  
@@ -48,7 +48,7 @@ diff --git a/src/l-space.mjs b/src/l-space.mjs
 @@ -1,7 +1,7 @@
  import { createHash } from "node:crypto";
  import { readingOfSides } from "@red-cup-engineering/computer-data-engineering-services-section/four";
- import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 -import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  
@@ -58,7 +58,7 @@ diff --git a/src/work-circulation.mjs b/src/work-circulation.mjs
 --- a/src/work-circulation.mjs
 +++ b/src/work-circulation.mjs
 @@ -1,5 +1,5 @@
- import { isNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 -import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  
@@ -115,7 +115,7 @@ diff --git a/test/l-space.test.mjs b/test/l-space.test.mjs
 -import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  import { createCarrierAdmissionReceipt, createModeledUnionDimension, createNotebookLmLibraryQueryActuator, NOTEBOOK_PROVIDER } from "../src/index.mjs";
- import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
  
 diff --git a/test/work-circulation.test.mjs b/test/work-circulation.test.mjs
 --- a/test/work-circulation.test.mjs
@@ -126,6 +126,6 @@ diff --git a/test/work-circulation.test.mjs b/test/work-circulation.test.mjs
 -import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-content-address-engineering-services-section/semantic-content-identity";
 +import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-data-engineering-services-section/semiotic-expression-notation/semantic-content-identity";
  import { createCarrierAdmissionReceipt, createModeledUnionDimension, createWorkCarrier, deriveCultivationDemandCarrier } from "../src/index.mjs";
- import { makeNiUri } from "@red-cup-engineering/uri-services-section/ni-uri";
+ import { makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
  
 

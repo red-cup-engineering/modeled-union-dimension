@@ -37,7 +37,7 @@ later package metadata and license are preserved. This migration does not
 replace that existing work with another branch of the same capability.
 
 The original Exchange producer selected for receiving is the actual registry
-package `@red-cup-engineering/semiotic-exchange-chain-services-section@0.1.9`.
+package `@red-cup-engineering/semiotic-exchange-chain-computer-system-engineering-services-section@0.1.9`.
 Its producer bytes were separately compared with canonical source owner
 `red-cup-engineering/semiotic-exchange-chain-engineering-services-section` at
 `587d33b64001e35eab3a16a8dc53c44e3337671d`. The producer's canonical induction
