@@ -1,5 +1,5 @@
 import { isNiUri, makeNiUri, niUriDigestBytes } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/typed-computer-code-engine/semiotic-expression-notation/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 
 export const MARSH_EXCHANGE_PROFILE = "marsh:exchange:v1";
 // SHA-256 of the canonical CBOR text term specified by MARSH E1, not a SEN envelope.

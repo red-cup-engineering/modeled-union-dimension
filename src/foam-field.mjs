@@ -1,7 +1,7 @@
 import { fixedSet, readingOfSides } from "@red-cup-engineering/metrologic/four";
 import { closureMonadReceipt, knowledgeJoinClosure } from "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber";
 import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/typed-computer-code-engine/semiotic-expression-notation/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 
 const PHASE = Object.freeze({ absurd: "void", potential: "positive-bulk", active: "negative-bulk", stable: "interface" });
 // A long-lived MUD must not retain one permanent Map key for every territory

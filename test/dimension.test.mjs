@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/typed-computer-code-engine/semiotic-expression-notation/semantic-content-identity";
+import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 import { createCarrierAdmissionReceipt, createModeledUnionDimension, induceTemporalFailureRepairMoves } from "../src/index.mjs";
 import {
   inducePrivateLiveMudDemand,
