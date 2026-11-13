@@ -14,7 +14,7 @@ arguments = ["npm", "install", "--ignore-scripts", "--no-audit", "--no-fund",
              "--cache=/workspace/scratch/96a3ae9a64a4/exchange-consumers/npm-cache"]
 record = {"cwd": str(root), "arguments": arguments, "inputs": inputs,
           "selection": {"computer-data-engineering-services-section": "0.6.1",
-                        "metrologic": "0.4.0", "uri-services-section": "0.1.2"},
+                        "metrologic": "0.4.0", "uri-engineering-services-section": "0.1.2"},
           "basis": "Actual original Ethereum lock-selected registry suppliers; root-approved Dimension candidate",
           "startedAt": time.time()}
 with (output / "install-selected.stdout.log").open("w") as stdout, (output / "install-selected.stderr.log").open("w") as stderr:
