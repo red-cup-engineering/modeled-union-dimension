@@ -1,0 +1,9 @@
+{
+  "head": "35f60898345ec65f0afb37cd789739ad3f305408",
+  "mainTree": "e9bacb98c55ff28417968862d85774775203b49c",
+  "originalPR1": "a9f520dfe1b239acff60ae3b2c24dd2650ff7ac6",
+  "mergeBase": "e2c3a82ab8773cdaab968502e7d581c09eec1b38",
+  "exactCommitObjects": 5,
+  "candidateWorktreePreserved": true,
+  "scope": "Exact Git object restoration from API source metadata and independently SHA1-checked original content; no candidate content committed as an original revision."
+}

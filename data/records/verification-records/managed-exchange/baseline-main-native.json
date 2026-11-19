@@ -1,0 +1,14 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "verify"
+  ],
+  "source": "35f60898345ec65f0afb37cd789739ad3f305408",
+  "context": "exact restored original source; no standalone workspace dependency selection exists",
+  "exitCode": 1,
+  "elapsedSeconds": 0.8011362552642822,
+  "logSha256": "6d38dc984ec323a06afdc7ed326aee73ea9f154781e177e0c51a02314bc533d3",
+  "node": "v24.22.1",
+  "npm": "11.9.0"
+}
