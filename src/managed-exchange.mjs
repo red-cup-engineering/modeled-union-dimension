@@ -11,9 +11,9 @@ const KINDS = Object.freeze({
   Work: "0x1fcabfc7baee05853e9087275509063b9122adf28de39b3baa4c44c4392b05e2",
   Relation: "0x0f57c204ea7f93c5f817a7e0e02deeb0de84af265777673608c98e9f9967447d",
 });
-const VALIDATIONS = new Set(["CellSeated", "DemandRaised", "DemandOffered"]);
-const MOVES = new Set([...VALIDATIONS, "CellRetired", "PurchaseMoved", "DemandResultSubmitted", "DemandReceived"]);
-const CARRIERS = new Set([...VALIDATIONS, "DemandResultSubmitted", "DemandReceived"]);
+const ADMISSIONS = new Set(["CellSeated", "DemandRaised", "DemandOffered"]);
+const MOVES = new Set([...ADMISSIONS, "CellRetired", "PurchaseMoved", "DemandResultSubmitted", "DemandReceived"]);
+const CARRIERS = new Set([...ADMISSIONS, "DemandResultSubmitted", "DemandReceived"]);
 const DECIMAL = /^(?:0|[1-9][0-9]*)$/u;
 const DIGEST = /^0x[0-9a-f]{64}$/u;
 const ACCOUNT = /^0x[0-9a-f]{40}$/u;
@@ -116,9 +116,9 @@ export function replayManagedExchange(events, { chainId, exchange }) {
     const isCell = event.kind === "CellSeated" || event.kind === "CellRetired", isOffer = event.kind === "DemandOffered";
     same(state.resource, isCell ? event.cell : isOffer ? event.offer : event.demand, "semantic/native resource");
     same(state.kind, KINDS[isCell ? "Actor" : isOffer ? "Relation" : "Work"], "resource kind");
-    if (!VALIDATIONS.has(event.kind)) same(event.sequence, state.sequence, "semantic/native sequence");
+    if (!ADMISSIONS.has(event.kind)) same(event.sequence, state.sequence, "semantic/native sequence");
     const prior = resources.get(state.resource);
-    if (VALIDATIONS.has(event.kind)) {
+    if (ADMISSIONS.has(event.kind)) {
       if (prior) throw new Error("managed resource was admitted twice");
       same(state.sequence, "1", "admission sequence"); same(state.priorSequence, "0", "admission prior sequence"); same(state.priorContent, ZERO, "admission prior content");
     } else {

@@ -1,5 +1,5 @@
 import { fixedSet, readingOfSides } from "@red-cup-engineering/metrologic/four";
-import { closureMonadRecord, knowledgeJoinClosure } from "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber";
+import { closureMonadReceipt, knowledgeJoinClosure } from "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber";
 import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 
@@ -28,17 +28,17 @@ function exactNi(value, label) {
   return value;
 }
 
-function validateTerritory(record) {
-  if (record?.type !== "CarrierAdmissionReceipt" || record.version !== 1 || record.disposition !== "admitted") throw new TypeError("territoryAdmission must be one CarrierAdmissionReceipt v1");
-  if (record.carrier === null || typeof record.carrier !== "object" || Array.isArray(record.carrier)) throw new TypeError("territoryAdmission.carrier must be one typed decoded relational value");
-  required(record.carrier.type, "territoryAdmission.carrier.type");
-  if (!("value" in record.carrier)) throw new TypeError("territoryAdmission.carrier.value is required");
-  if (!Array.isArray(record.protocolVerificationReceiptNis) || record.protocolVerificationReceiptNis.length === 0) throw new TypeError("territoryAdmission must retain protocol verification receipts");
-  const protocolVerificationRecordNis = [...new Set(record.protocolVerificationReceiptNis.map((ni, index) => exactNi(ni, `territoryAdmission.protocolVerificationReceiptNis[${index}]`)))].sort();
-  const contentNi = identify(record.carrier, `semiotic-exchange.${record.carrier.type}`);
-  const body = freeze({ type: "CarrierAdmissionReceipt", version: 1, disposition: "admitted", contentNi, carrier: { type: record.carrier.type, value: structuredClone(record.carrier.value) }, protocolVerificationReceiptNis: protocolVerificationRecordNis });
+function admitTerritory(receipt) {
+  if (receipt?.type !== "CarrierAdmissionReceipt" || receipt.version !== 1 || receipt.disposition !== "admitted") throw new TypeError("territoryAdmission must be one CarrierAdmissionReceipt v1");
+  if (receipt.carrier === null || typeof receipt.carrier !== "object" || Array.isArray(receipt.carrier)) throw new TypeError("territoryAdmission.carrier must be one typed decoded relational value");
+  required(receipt.carrier.type, "territoryAdmission.carrier.type");
+  if (!("value" in receipt.carrier)) throw new TypeError("territoryAdmission.carrier.value is required");
+  if (!Array.isArray(receipt.protocolVerificationReceiptNis) || receipt.protocolVerificationReceiptNis.length === 0) throw new TypeError("territoryAdmission must retain protocol verification receipts");
+  const protocolVerificationReceiptNis = [...new Set(receipt.protocolVerificationReceiptNis.map((ni, index) => exactNi(ni, `territoryAdmission.protocolVerificationReceiptNis[${index}]`)))].sort();
+  const contentNi = identify(receipt.carrier, `semiotic-exchange.${receipt.carrier.type}`);
+  const body = freeze({ type: "CarrierAdmissionReceipt", version: 1, disposition: "admitted", contentNi, carrier: { type: receipt.carrier.type, value: structuredClone(receipt.carrier.value) }, protocolVerificationReceiptNis });
   const canonical = freeze({ id: identify(body), ...body });
-  if (canonical.id !== record.id || canonical.contentNi !== record.contentNi) throw new Error("territoryAdmission does not match its canonical identity");
+  if (canonical.id !== receipt.id || canonical.contentNi !== receipt.contentNi) throw new Error("territoryAdmission does not match its canonical identity");
   const territory = canonical.carrier.value;
   if (territory?.type !== "NodeWorkspaceSourceCatalogReceipt" || territory.version !== 1) throw new TypeError("territoryAdmission does not carry a NodeWorkspaceSourceCatalogReceipt v1");
   exactNi(territory.id, "territoryAdmission.carrier.value.id");
@@ -46,38 +46,38 @@ function validateTerritory(record) {
   return { admission: canonical, territory };
 }
 
-function territoryLoci(validation, territory) {
+function territoryLoci(admission, territory) {
   const seen = new Set();
   return territory.packages.map((pkg, index) => {
     required(pkg?.name, `territory.packages[${index}].name`);
     required(pkg?.path, `territory.packages[${index}].path`);
     exactNi(pkg.classificationReceiptNi, `territory.packages[${index}].classificationReceiptNi`);
     if (pkg.manifestEvidence === undefined || !Array.isArray(pkg.proofPath) || pkg.proofPath.length === 0) throw new TypeError(`territory.packages[${index}] lacks manifest evidence or its proof path`);
-    const location = `package:${pkg.name}`;
-    if (seen.has(location)) throw new Error(`territory contains duplicate locus ${location}`);
-    seen.add(location);
-    const coordinate = freeze({ type: "CodebaseTerritoryActorLocus", locus: location, package: pkg.name, packageVersion: pkg.version, path: pkg.path, actor: pkg.service?.actor ?? null, nodeId: pkg.service?.nodeId ?? null });
-    const witnessPath = freeze({ territoryAdmissionReceiptNi: validation.id, territoryContentNi: validation.contentNi, territoryReceiptNi: territory.id, manifestEvidence: pkg.manifestEvidence, classificationReceiptNi: pkg.classificationReceiptNi, proofPath: pkg.proofPath });
+    const locus = `package:${pkg.name}`;
+    if (seen.has(locus)) throw new Error(`territory contains duplicate locus ${locus}`);
+    seen.add(locus);
+    const coordinate = freeze({ type: "CodebaseTerritoryActorLocus", locus, package: pkg.name, packageVersion: pkg.version, path: pkg.path, actor: pkg.service?.actor ?? null, nodeId: pkg.service?.nodeId ?? null });
+    const witnessPath = freeze({ territoryAdmissionReceiptNi: admission.id, territoryContentNi: admission.contentNi, territoryReceiptNi: territory.id, manifestEvidence: pkg.manifestEvidence, classificationReceiptNi: pkg.classificationReceiptNi, proofPath: pkg.proofPath });
     return freeze({ ...coordinate, coordinateNi: identify(coordinate), witnessPath });
   });
 }
 
-function territoryRelations(validation, territory, locationSet) {
+function territoryRelations(admission, territory, locusSet) {
   return territory.relations.flatMap((edge, index) => {
     if (edge?.type !== "node-package-dependency" || edge.scope !== "workspace") return [];
     const from = `package:${required(edge.consumer, `territory.relations[${index}].consumer`)}`;
     const to = `package:${required(edge.provider, `territory.relations[${index}].provider`)}`;
-    if (!locationSet.has(from) || !locationSet.has(to)) throw new Error(`workspace dependency ${from} -> ${to} escapes the admitted package carrier`);
+    if (!locusSet.has(from) || !locusSet.has(to)) throw new Error(`workspace dependency ${from} -> ${to} escapes the admitted package carrier`);
     const relation = freeze({
       type: "CodebaseTerritoryDependencyRelation", from, to, requested: edge.requested,
       role: edge.role, optional: edge.optional, selected: edge.selected,
-      witnessPath: { territoryAdmissionReceiptNi: validation.id, territoryContentNi: validation.contentNi, territoryReceiptNi: territory.id, relationOrdinal: index },
+      witnessPath: { territoryAdmissionReceiptNi: admission.id, territoryContentNi: admission.contentNi, territoryReceiptNi: territory.id, relationOrdinal: index },
     });
     return [freeze({ ...relation, id: identify(relation) })];
   });
 }
 
-function validateObserverFamily(value, locationSet) {
+function admitObserverFamily(value, locusSet) {
   if (value?.type !== "FoamObserverFamily" || value.version !== 1 || !Array.isArray(value.observers)) throw new TypeError("observerFamily must be a FoamObserverFamily v1");
   const actors = new Set();
   const observers = value.observers.map((observer, observerIndex) => {
@@ -86,12 +86,12 @@ function validateObserverFamily(value, locationSet) {
     actors.add(actor);
     if (!Array.isArray(observer.commitments)) throw new TypeError(`observer ${actor} commitments must be an array`);
     const commitments = observer.commitments.map((commitment, commitmentIndex) => {
-      const location = required(commitment?.locus, `commitment ${observerIndex}:${commitmentIndex}.locus`);
-      if (!locationSet.has(location)) throw new Error(`observer commitment names locus outside the admitted territory: ${location}`);
+      const locus = required(commitment?.locus, `commitment ${observerIndex}:${commitmentIndex}.locus`);
+      if (!locusSet.has(locus)) throw new Error(`observer commitment names locus outside the admitted territory: ${locus}`);
       if (commitment.polarity !== "positive" && commitment.polarity !== "negative") throw new TypeError(`commitment ${observerIndex}:${commitmentIndex}.polarity must be positive or negative`);
       if (!Array.isArray(commitment.witnessNis) || commitment.witnessNis.length === 0) throw new TypeError(`commitment ${observerIndex}:${commitmentIndex} must retain at least one witness ni`);
       const witnessNis = [...new Set(commitment.witnessNis.map((ni, witnessIndex) => exactNi(ni, `commitment ${observerIndex}:${commitmentIndex}.witnessNis[${witnessIndex}]`)))].sort();
-      const assertion = freeze({ type: "FoamObservedCommitment", actor, locus: location, polarity: commitment.polarity, witnessNis });
+      const assertion = freeze({ type: "FoamObservedCommitment", actor, locus, polarity: commitment.polarity, witnessNis });
       return freeze({ ...assertion, assertionNi: identify(assertion) });
     });
     commitments.sort((left, right) => left.assertionNi.localeCompare(right.assertionNi));
@@ -117,13 +117,13 @@ function closureEvidence(four) {
   const prior = closureEvidenceCache.get(four.charge);
   if (prior !== undefined) return prior;
   const closure = knowledgeJoinClosure(four.charge);
-  const record = closureMonadRecord(closure, "absurd", "absurd");
-  const orbit = record.joinAfterClosureOrbit;
+  const receipt = closureMonadReceipt(closure, "absurd", "absurd");
+  const orbit = receipt.joinAfterClosureOrbit;
   const ordinal = orbit.findIndex((value, index) => index < orbit.length - 1 && value === orbit[index + 1]);
   const body = freeze({
-    type: "FoamFiniteClosureEvidence", version: 1, operation: closure.operation, orbit, fixedPoint: record.settled,
+    type: "FoamFiniteClosureEvidence", version: 1, operation: closure.operation, orbit, fixedPoint: receipt.settled,
     closureOrdinal: { kind: "finite", value: ordinal }, regime: "strict-finite",
-    laws: { inflationary: record.joinAfterClosureInflationary, settlesByThree: record.joinAfterClosureSettlesByThree, noPeriodicOrbits: record.noPeriodicOrbits, multiplicationIdempotent: record.multiplicationIdempotent },
+    laws: { inflationary: receipt.joinAfterClosureInflationary, settlesByThree: receipt.joinAfterClosureSettlesByThree, noPeriodicOrbits: receipt.noPeriodicOrbits, multiplicationIdempotent: receipt.multiplicationIdempotent },
     proofAuthority: {
       lean: ["Obsmetrologia.Valuation.lfp_is_settled", "Obsmetrologia.Valuation.lfp_reached_by_three", "Obsmetrologia.four_regime_dichotomy"],
       runtime: "@red-cup-engineering/metrologic/articulation/predicating/positing/closure-operator-fiber closureMonadReceipt",
@@ -135,34 +135,34 @@ function closureEvidence(four) {
 }
 
 /** Project the corpus FOAM field equation over an admitted codebase territory. */
-export function projectTerritoryFoam({ territoryAdmission: territoryValidation, observerFamily } = {}) {
-  const { admission: validation, territory } = validateTerritory(territoryValidation);
-  const loci = territoryLoci(validation, territory);
-  const locationSet = new Set(loci.map(({ locus: location }) => location));
-  const family = validateObserverFamily(observerFamily, locationSet);
+export function projectTerritoryFoam({ territoryAdmission, observerFamily } = {}) {
+  const { admission, territory } = admitTerritory(territoryAdmission);
+  const loci = territoryLoci(admission, territory);
+  const locusSet = new Set(loci.map(({ locus }) => locus));
+  const family = admitObserverFamily(observerFamily, locusSet);
   if (Object.isFrozen(observerFamily)) {
-    const cached = frozenProjectionCache.get(validation.id);
+    const cached = frozenProjectionCache.get(admission.id);
     if (cached !== undefined) {
       // Reuse is least-recently-used by admitted territory, never by raw
       // mutable observer inputs. The current canonical family is admitted above.
-      frozenProjectionCache.delete(validation.id);
-      frozenProjectionCache.set(validation.id, cached);
+      frozenProjectionCache.delete(admission.id);
+      frozenProjectionCache.set(admission.id, cached);
     }
     const prior = cached?.get(observerFamily);
     if (prior?.observerFamilyNi === family.id) return prior.projection;
   }
-  const relations = territoryRelations(validation, territory, locationSet);
+  const relations = territoryRelations(admission, territory, locusSet);
   // The observer family is admitted in canonical actor/assertion order above.  Index
   // its commitments once: `filter`ing the whole family at every locus made the
   // field equation quadratic while contributing no semantic information.
-  const commitmentsByLocation = new Map();
+  const commitmentsByLocus = new Map();
   for (const observer of family.observers) for (const commitment of observer.commitments) {
-    const atLocation = commitmentsByLocation.get(commitment.locus) ?? [];
-    atLocation.push(commitment);
-    commitmentsByLocation.set(commitment.locus, atLocation);
+    const atLocus = commitmentsByLocus.get(commitment.locus) ?? [];
+    atLocus.push(commitment);
+    commitmentsByLocus.set(commitment.locus, atLocus);
   }
   const sections = loci.map((coordinate) => {
-    const observed = commitmentsByLocation.get(coordinate.locus) ?? [];
+    const observed = commitmentsByLocus.get(coordinate.locus) ?? [];
     const four = exactFour(observed);
     const closure = closureEvidence(four);
     const section = freeze({
@@ -175,7 +175,7 @@ export function projectTerritoryFoam({ territoryAdmission: territoryValidation, 
   const counts = { void: 0, "positive-bulk": 0, "negative-bulk": 0, interface: 0 };
   for (const { phase } of sections) counts[phase] += 1;
   const body = freeze({
-    type: "ModeledUnionFoamFieldPresentation", version: 1, territoryAdmissionReceiptNi: validation.id, territoryReceiptNi: territory.id,
+    type: "ModeledUnionFoamFieldPresentation", version: 1, territoryAdmissionReceiptNi: admission.id, territoryReceiptNi: territory.id,
     observerFamily: family,
     fourNegationSelfDualLocus: { values: fixedSet("negation"), symbols: ["bottom", "top"], leanTheorem: "Obsmetrologia.Charge.negate_orbit", runtimeWitness: "@red-cup-engineering/computer-data-engineering-services-section/four fixedSet(negation)" },
     sections, relations, census: freeze(counts),
@@ -188,7 +188,7 @@ export function projectTerritoryFoam({ territoryAdmission: territoryValidation, 
   });
   const projection = freeze({ ...body, id: identify(body) });
   if (Object.isFrozen(observerFamily)) {
-    let byObserver = frozenProjectionCache.get(validation.id);
+    let byObserver = frozenProjectionCache.get(admission.id);
     if (byObserver === undefined) {
       // Exactly one bounded weak-key table per currently useful admission.
       // Eviction changes reuse only, not semantic IDs, evidence or FOUR values.
@@ -196,7 +196,7 @@ export function projectTerritoryFoam({ territoryAdmission: territoryValidation, 
         frozenProjectionCache.delete(frozenProjectionCache.keys().next().value);
       }
       byObserver = new WeakMap();
-      frozenProjectionCache.set(validation.id, byObserver);
+      frozenProjectionCache.set(admission.id, byObserver);
     }
     byObserver.set(observerFamily, { observerFamilyNi: family.id, projection });
   }

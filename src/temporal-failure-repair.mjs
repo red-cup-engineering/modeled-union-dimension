@@ -6,13 +6,13 @@ function ni(value, label) {
 }
 
 /** Convert source observation plus semantic scan into MUD-market repair moves. */
-export function induceTemporalFailureRepairMoves({ raiser, repositoryObservation, scanReceipt: scanRecord, induceDemand }) {
+export function induceTemporalFailureRepairMoves({ raiser, repositoryObservation, scanReceipt, induceDemand }) {
   if (repositoryObservation?.type !== "RepositoryMaterialObservation") throw new TypeError("repositoryObservation must be a RepositoryMaterialObservation");
   const observationNi = ni(repositoryObservation.id, "repositoryObservation.id");
-  if (scanRecord?.type !== "TemporalFailureTerritoryScanReceipt" || scanRecord.conforms !== false || !Array.isArray(scanRecord.obligations)) throw new TypeError("scanReceipt must be a nonconforming TemporalFailureTerritoryScanReceipt");
-  const scanNi = ni(scanRecord.id, "scanReceipt.id");
+  if (scanReceipt?.type !== "TemporalFailureTerritoryScanReceipt" || scanReceipt.conforms !== false || !Array.isArray(scanReceipt.obligations)) throw new TypeError("scanReceipt must be a nonconforming TemporalFailureTerritoryScanReceipt");
+  const scanNi = ni(scanReceipt.id, "scanReceipt.id");
   if (typeof induceDemand !== "function") throw new TypeError("induceDemand must be the canonical capability-repair demand fabricator");
-  const demands = scanRecord.obligations.map(({ resourcePath, mark }, index) => {
+  const demands = scanReceipt.obligations.map(({ resourcePath, mark }, index) => {
     if (typeof resourcePath !== "string" || resourcePath.length === 0 || typeof mark?.kind !== "string" || !Number.isInteger(mark?.at?.line)) throw new TypeError(`scanReceipt obligation ${index} is not an addressed temporal-failure mark`);
     return induceDemand({ raiser,
       locus: `repository-material:${observationNi}:${resourcePath}:${mark.at.line}:${mark.kind}`,
