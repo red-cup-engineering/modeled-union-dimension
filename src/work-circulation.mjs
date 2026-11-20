@@ -37,7 +37,7 @@ function uniqueIdentifiers(values, label) {
  * The canonical carrier for a unit of work.  It carries the whole descent, so a
  * demand is never a detached status-string or a private queue entry.
  */
-export function createWorkCarrier({ endeavor, project, milestone, duty, qualification = {}, evidenceNis = [] } = {}) {
+export function createWorkCarrier({ endeavor, project, milestone, duty, qualification: validation = {}, evidenceNis = [] } = {}) {
   if (endeavor === null || typeof endeavor !== "object" || Array.isArray(endeavor)) throw new TypeError("endeavor must be an object");
   if (project === null || typeof project !== "object" || Array.isArray(project)) throw new TypeError("project must be an object");
   if (milestone === null || typeof milestone !== "object" || Array.isArray(milestone)) throw new TypeError("milestone must be an object");
@@ -50,9 +50,9 @@ export function createWorkCarrier({ endeavor, project, milestone, duty, qualific
     milestone: { id: identifier(milestone.id, "milestone.id"), project: identifier(milestone.project, "milestone.project") },
     duty: { id: identifier(duty.id, "duty.id"), office: identifier(duty.office, "duty.office") },
     qualification: {
-      ranks: uniqueIdentifiers(qualification.ranks ?? [], "qualification.ranks"),
-      cohorts: uniqueIdentifiers(qualification.cohorts ?? [], "qualification.cohorts"),
-      capabilities: uniqueIdentifiers(qualification.capabilities ?? [], "qualification.capabilities"),
+      ranks: uniqueIdentifiers(validation.ranks ?? [], "qualification.ranks"),
+      cohorts: uniqueIdentifiers(validation.cohorts ?? [], "qualification.cohorts"),
+      capabilities: uniqueIdentifiers(validation.capabilities ?? [], "qualification.capabilities"),
     },
     evidenceNis: freeze([...new Set(evidenceNis.map((value, index) => exactNi(value, `evidenceNis[${index}]`)))].sort()),
   });
@@ -61,15 +61,15 @@ export function createWorkCarrier({ endeavor, project, milestone, duty, qualific
   return freeze({ type: "UnionWorkCarrier", value: normalized });
 }
 
-function admitWorkCarrier(admission) {
-  if (admission?.carrier?.type !== "UnionWorkCarrier") return null;
-  const carrier = createWorkCarrier(admission.carrier.value);
-  if (identify(admission.version === 2 ? carrier.value : carrier, `semiotic-exchange.${carrier.type}`) !== admission.contentNi) throw new Error("UnionWorkCarrier admission does not match its canonical identity");
-  return freeze({ carrierNi: admission.contentNi, admissionReceiptNi: admission.id, work: carrier.value });
+function validateWorkCarrier(validation) {
+  if (validation?.carrier?.type !== "UnionWorkCarrier") return null;
+  const carrier = createWorkCarrier(validation.carrier.value);
+  if (identify(validation.version === 2 ? carrier.value : carrier, `semiotic-exchange.${carrier.type}`) !== validation.contentNi) throw new Error("UnionWorkCarrier admission does not match its canonical identity");
+  return freeze({ carrierNi: validation.contentNi, admissionReceiptNi: validation.id, work: carrier.value });
 }
 
-function qualificationFor(actor, work, standings) {
-  const qualifications = [];
+function validationFor(actor, work, standings) {
+  const validations = [];
   for (const standing of standings) {
     const claim = standing.object;
     if (claim?.type !== "WorkQualificationClaim" || claim.version !== 1 || !standing.support?.positive || !same(claim.actor, actor)) continue;
@@ -78,10 +78,10 @@ function qualificationFor(actor, work, standings) {
     const cohorts = uniqueIdentifiers(claim.cohorts ?? [], "WorkQualificationClaim.cohorts");
     const duties = uniqueIdentifiers(claim.duties ?? [], "WorkQualificationClaim.duties");
     const capabilities = uniqueIdentifiers(claim.capabilities ?? [], "WorkQualificationClaim.capabilities");
-    qualifications.push(freeze({ evidenceNi: standing.objectNi, rank, cohorts, duties, capabilities, office: claim.office }));
+    validations.push(freeze({ evidenceNi: standing.objectNi, rank, cohorts, duties, capabilities, office: claim.office }));
   }
   const required = work.qualification;
-  const match = qualifications.find((value) => value.office === work.duty.office
+  const match = validations.find((value) => value.office === work.duty.office
     && value.duties.includes(work.duty.id)
     && (required.ranks.length === 0 || required.ranks.includes(value.rank))
     && required.cohorts.every((cohort) => value.cohorts.includes(cohort))
@@ -111,21 +111,21 @@ function workAttempts(demand, work, offers, standings) {
 }
 
 /** Produce a reusable, unraised SXC demand carrier from a witnessed work refusal. */
-export function deriveCultivationDemandCarrier({ workLocus, refusal }) {
-  if (workLocus?.type !== "UnionWorkLocus") throw new TypeError("workLocus must be a UnionWorkLocus");
-  if (refusal?.outcome !== "refused") throw new TypeError("refusal must be a refused WorkAssignmentAttemptReceipt");
-  exactNi(refusal.residueNi, "refusal.residueNi");
+export function deriveCultivationDemandCarrier({ workLocus: workLocation, refusal: rejection }) {
+  if (workLocation?.type !== "UnionWorkLocus") throw new TypeError("workLocus must be a UnionWorkLocus");
+  if (rejection?.outcome !== "refused") throw new TypeError("refusal must be a refused WorkAssignmentAttemptReceipt");
+  exactNi(rejection.residueNi, "refusal.residueNi");
   return freeze({ type: "UnionCultivationDemandCarrier", value: freeze({
     type: "UnionCultivationDemandCarrier", version: 1,
-    parentWorkLocus: workLocus.id,
-    endeavor: workLocus.endeavor,
-    project: workLocus.project,
-    milestone: workLocus.milestone,
-    requiredOffice: workLocus.duty.office,
-    requiredDuty: workLocus.duty.id,
-    qualification: workLocus.qualification,
-    residueNi: refusal.residueNi,
-    sourceAttemptNi: refusal.evidenceNi,
+    parentWorkLocus: workLocation.id,
+    endeavor: workLocation.endeavor,
+    project: workLocation.project,
+    milestone: workLocation.milestone,
+    requiredOffice: workLocation.duty.office,
+    requiredDuty: workLocation.duty.id,
+    qualification: workLocation.qualification,
+    residueNi: rejection.residueNi,
+    sourceAttemptNi: rejection.evidenceNi,
     market: "union-officer-academy/formation-lianqun",
   }) });
 }
@@ -135,63 +135,63 @@ export function deriveCultivationDemandCarrier({ workLocus, refusal }) {
  * moves.  This is the Rendanheyi path: user demand descends into an office duty;
  * Huidu Guanli stays visible as held positive/negative evidence, never a queue.
  */
-export function projectWorkCirculation({ admissions, demands, offers, federationHistory }) {
+export function projectWorkCirculation({ admissions: validations, demands, offers, federationHistory }) {
   const carriers = new Map();
-  for (const admission of admissions.values()) {
-    const admitted = admitWorkCarrier(admission);
-    if (admitted !== null) carriers.set(admitted.carrierNi, admitted);
+  for (const validation of validations.values()) {
+    const validated = validateWorkCarrier(validation);
+    if (validated !== null) carriers.set(validated.carrierNi, validated);
   }
   const loci = [];
   const relations = [];
   for (const demand of demands) {
-    const admitted = carriers.get(demand.raised.carrierNi);
-    if (!admitted) continue;
-    const work = admitted.work;
+    const validated = carriers.get(demand.raised.carrierNi);
+    if (!validated) continue;
+    const work = validated.work;
     const attempts = workAttempts(demand, work, offers, federationHistory);
     const managed = demand.profile === MARSH_EXCHANGE_PROFILE;
     const accepted = managed ? demand.receiving : demand.settlement;
     const completed = attempts.find((attempt) => attempt.outcome === "completed" && accepted && same(attempt.result, accepted.result) && same(attempt.offer, demand.purchase?.offer));
-    const refusals = attempts.filter((attempt) => attempt.outcome === "refused");
-    const locus = freeze({
-      type: "UnionWorkLocus", id: demand.id, demandNi: admitted.carrierNi, workCarrierAdmissionReceiptNi: admitted.admissionReceiptNi,
+    const rejections = attempts.filter((attempt) => attempt.outcome === "refused");
+    const location = freeze({
+      type: "UnionWorkLocus", id: demand.id, demandNi: validated.carrierNi, workCarrierAdmissionReceiptNi: validated.admissionReceiptNi,
       ...(managed ? { profile: MARSH_EXCHANGE_PROFILE, carrierId: demand.carrierId, exchangePhase: demand.phase, selectedOffer: demand.purchase?.offer ?? null,
         submission: demand.submission, receiving: demand.receiving,
         acceptance: demand.receiving === null ? null : { actor: demand.raiser, result: demand.receiving.result, receipt: demand.receiving.receipt, chainPosition: demand.receiving.chainPosition },
         completionEvidenceNi: completed?.evidenceNi ?? null } : { settlementInterpretation: "legacy-provider-settlement" }),
       endeavor: work.endeavor, project: work.project, milestone: work.milestone, duty: work.duty, qualification: work.qualification,
       phase: completed ? "settled" : demand.purchase ? "engaged" : "open",
-      grayDegree: completed ? "stable" : refusals.length > 0 ? "active" : "absurd",
+      grayDegree: completed ? "stable" : rejections.length > 0 ? "active" : "absurd",
       attempts,
-      cultivation: freeze(refusals.map((refusal) => freeze({ type: "UnionCultivationDemandLocus", id: identify(deriveCultivationDemandCarrier({ workLocus: { type: "UnionWorkLocus", id: demand.id, endeavor: work.endeavor, project: work.project, milestone: work.milestone, duty: work.duty, qualification: work.qualification }, refusal })), sourceAttemptNi: refusal.evidenceNi, phase: "ready-to-raise", carrier: deriveCultivationDemandCarrier({ workLocus: { type: "UnionWorkLocus", id: demand.id, endeavor: work.endeavor, project: work.project, milestone: work.milestone, duty: work.duty, qualification: work.qualification }, refusal }) }))),
+      cultivation: freeze(rejections.map((rejection) => freeze({ type: "UnionCultivationDemandLocus", id: identify(deriveCultivationDemandCarrier({ workLocus: { type: "UnionWorkLocus", id: demand.id, endeavor: work.endeavor, project: work.project, milestone: work.milestone, duty: work.duty, qualification: work.qualification }, refusal: rejection })), sourceAttemptNi: rejection.evidenceNi, phase: "ready-to-raise", carrier: deriveCultivationDemandCarrier({ workLocus: { type: "UnionWorkLocus", id: demand.id, endeavor: work.endeavor, project: work.project, milestone: work.milestone, duty: work.duty, qualification: work.qualification }, refusal: rejection }) }))),
     });
-    loci.push(locus);
+    loci.push(location);
     relations.push(freeze({ type: "realizesEndeavor", from: `work:${demand.id}`, to: `endeavor:${work.endeavor.id}` }));
     relations.push(freeze({ type: "belongsToProject", from: `work:${demand.id}`, to: `project:${work.project.id}` }));
     relations.push(freeze({ type: "advancesMilestone", from: `work:${demand.id}`, to: `milestone:${work.milestone.id}` }));
     relations.push(freeze({ type: "borneAsDuty", from: `work:${demand.id}`, to: `office:${work.duty.office}/duty:${work.duty.id}` }));
   }
   const milestones = new Map(), projects = new Map(), endeavors = new Map();
-  for (const locus of loci) {
-    const milestone = milestones.get(locus.milestone.id) ?? { ...locus.milestone, workIds: [] };
-    if (milestone.project !== locus.project.id) throw new Error("one milestone cannot belong to two projects");
-    milestone.workIds.push(locus.id); milestones.set(milestone.id, milestone);
-    const project = projects.get(locus.project.id) ?? { ...locus.project, milestoneIds: [] };
-    if (project.endeavor !== locus.endeavor.id) throw new Error("one project cannot belong to two endeavors");
-    if (!project.milestoneIds.includes(locus.milestone.id)) project.milestoneIds.push(locus.milestone.id);
+  for (const location of loci) {
+    const milestone = milestones.get(location.milestone.id) ?? { ...location.milestone, workIds: [] };
+    if (milestone.project !== location.project.id) throw new Error("one milestone cannot belong to two projects");
+    milestone.workIds.push(location.id); milestones.set(milestone.id, milestone);
+    const project = projects.get(location.project.id) ?? { ...location.project, milestoneIds: [] };
+    if (project.endeavor !== location.endeavor.id) throw new Error("one project cannot belong to two endeavors");
+    if (!project.milestoneIds.includes(location.milestone.id)) project.milestoneIds.push(location.milestone.id);
     projects.set(project.id, project);
-    endeavors.set(locus.endeavor.id, { ...locus.endeavor });
+    endeavors.set(location.endeavor.id, { ...location.endeavor });
   }
   function aggregatePhase(children) {
     if (children.length > 0 && children.every((child) => child.phase === "settled")) return freeze({ phase: "settled", grayDegree: "stable" });
     if (children.some((child) => child.phase === "engaged")) return freeze({ phase: "engaged", grayDegree: children.some((child) => child.grayDegree === "active") ? "active" : "absurd" });
     return freeze({ phase: "open", grayDegree: children.some((child) => child.grayDegree === "active") ? "active" : "absurd" });
   }
-  const milestoneLoci = [...milestones.values()].sort((a, b) => a.id.localeCompare(b.id)).map((milestone) => freeze({ type: "UnionMilestoneLocus", id: milestone.id, project: milestone.project, workIds: freeze([...milestone.workIds].sort()), ...aggregatePhase(loci.filter((locus) => milestone.workIds.includes(locus.id))) }));
-  const projectLoci = [...projects.values()].sort((a, b) => a.id.localeCompare(b.id)).map((project) => freeze({ type: "UnionProjectLocus", id: project.id, endeavor: project.endeavor, milestoneIds: freeze([...project.milestoneIds].sort()), ...aggregatePhase(milestoneLoci.filter((locus) => project.milestoneIds.includes(locus.id))) }));
+  const milestoneLoci = [...milestones.values()].sort((a, b) => a.id.localeCompare(b.id)).map((milestone) => freeze({ type: "UnionMilestoneLocus", id: milestone.id, project: milestone.project, workIds: freeze([...milestone.workIds].sort()), ...aggregatePhase(loci.filter((location) => milestone.workIds.includes(location.id))) }));
+  const projectLoci = [...projects.values()].sort((a, b) => a.id.localeCompare(b.id)).map((project) => freeze({ type: "UnionProjectLocus", id: project.id, endeavor: project.endeavor, milestoneIds: freeze([...project.milestoneIds].sort()), ...aggregatePhase(milestoneLoci.filter((location) => project.milestoneIds.includes(location.id))) }));
   const endeavorLoci = [...endeavors.values()].sort((a, b) => a.id.localeCompare(b.id)).map((endeavor) => freeze({ type: "UnionEndeavorLocus", id: endeavor.id, projectIds: freeze(projectLoci.filter((project) => project.endeavor === endeavor.id).map((project) => project.id).sort()), ...aggregatePhase(projectLoci.filter((project) => project.endeavor === endeavor.id)) }));
-  function qualification(actor, demandId) {
-    const locus = loci.find((value) => same(value.id, demandId));
-    return locus === undefined ? null : qualificationFor(actor, locus, federationHistory);
+  function validation(actor, demandId) {
+    const location = loci.find((value) => same(value.id, demandId));
+    return location === undefined ? null : validationFor(actor, location, federationHistory);
   }
-  return freeze({ loci: freeze([...loci, ...milestoneLoci, ...projectLoci, ...endeavorLoci]), workLoci: freeze(loci), relations: freeze(relations), qualification });
+  return freeze({ loci: freeze([...loci, ...milestoneLoci, ...projectLoci, ...endeavorLoci]), workLoci: freeze(loci), relations: freeze(relations), qualification: validation });
 }
