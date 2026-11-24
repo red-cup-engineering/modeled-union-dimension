@@ -1,0 +1,400 @@
+TAP version 13
+# Subtest: an observed Codex tool request becomes a MUD locus and an unbound SXC capability-market demand, never an actuator or move
+ok 1 - an observed Codex tool request becomes a MUD locus and an unbound SXC capability-market demand, never an actuator or move
+  ---
+  duration_ms: 52.724475
+  type: 'test'
+  ...
+# Subtest: the MUD refuses a transcript observation that fabricates an actuator binding
+ok 2 - the MUD refuses a transcript observation that fabricates an actuator binding
+  ---
+  duration_ms: 14.546764
+  type: 'test'
+  ...
+# Subtest: replays monotone live contract history into earned loci and causal relations
+ok 3 - replays monotone live contract history into earned loci and causal relations
+  ---
+  duration_ms: 1.362612
+  type: 'test'
+  ...
+# Subtest: WorkspaceContentGraph v3 relations remain carriers rather than becoming inferred evidence
+ok 4 - WorkspaceContentGraph v3 relations remain carriers rather than becoming inferred evidence
+  ---
+  duration_ms: 19.269481
+  type: 'test'
+  ...
+# Subtest: WorkspaceContentGraph refuses relation overlays that infer evidence or FOUR from carrier fields
+ok 5 - WorkspaceContentGraph refuses relation overlays that infer evidence or FOUR from carrier fields
+  ---
+  duration_ms: 7.515569
+  type: 'test'
+  ...
+# Subtest: FOUR charge consumes only exact top-level admitted federation standings
+ok 6 - FOUR charge consumes only exact top-level admitted federation standings
+  ---
+  duration_ms: 2.371682
+  type: 'test'
+  ...
+# Subtest: canonical carrier and paired UCAN/controller receipts enable one restricted purchase move
+ok 7 - canonical carrier and paired UCAN/controller receipts enable one restricted purchase move
+  ---
+  duration_ms: 4.886879
+  type: 'test'
+  ...
+# Subtest: refuses forged carrier identity and ungrounded authority
+ok 8 - refuses forged carrier identity and ungrounded authority
+  ---
+  duration_ms: 4.594239
+  type: 'test'
+  ...
+# Subtest: a witnessed canonical induction projects private GUI deployment as a real restricted move
+ok 9 - a witnessed canonical induction projects private GUI deployment as a real restricted move
+  ---
+  duration_ms: 121.227163
+  type: 'test'
+  ...
+# Subtest: x402 evidence is exact top-level federation matter, never a recursive shape scan
+ok 10 - x402 evidence is exact top-level federation matter, never a recursive shape scan
+  ---
+  duration_ms: 2.017669
+  type: 'test'
+  ...
+# Subtest: refuses displaced roles, noncausal ordering, and incoherent FOUR standings
+ok 11 - refuses displaced roles, noncausal ordering, and incoherent FOUR standings
+  ---
+  duration_ms: 0.881578
+  type: 'test'
+  ...
+# Subtest: a refusal becomes an open capability market locus and only a later positive settled provider receipt closes it
+ok 12 - a refusal becomes an open capability market locus and only a later positive settled provider receipt closes it
+  ---
+  duration_ms: 26.882406
+  type: 'test'
+  ...
+# Subtest: an A2A repository observation and temporal scan induce an actual restricted repair-market move
+ok 13 - an A2A repository observation and temporal scan induce an actual restricted repair-market move
+  ---
+  duration_ms: 15.88298
+  type: 'test'
+  ...
+# Subtest: the same admitted territory is void, bulk, or interface relative to observer family D
+ok 14 - the same admitted territory is void, bulk, or interface relative to observer family D
+  ---
+  duration_ms: 39.365296
+  type: 'test'
+  ...
+# Subtest: one observer can witness both evidence coordinates without inventing another actor
+ok 15 - one observer can witness both evidence coordinates without inventing another actor
+  ---
+  duration_ms: 9.614089
+  type: 'test'
+  ...
+# Subtest: each derived section retains territory, assertion, and closure content-address paths
+ok 16 - each derived section retains territory, assertion, and closure content-address paths
+  ---
+  duration_ms: 7.7424
+  type: 'test'
+  ...
+# Subtest: the MUD core appends admitted territory sections to its canonical loci presentation
+ok 17 - the MUD core appends admitted territory sections to its canonical loci presentation
+  ---
+  duration_ms: 13.155933
+  type: 'test'
+  ...
+# Subtest: negation self-dual values and higher-regime obstruction are explicit
+ok 18 - negation self-dual values and higher-regime obstruction are explicit
+  ---
+  duration_ms: 7.389979
+  type: 'test'
+  ...
+# Subtest: refuses unwitnessed, off-territory, and recursively nested commitments
+ok 19 - refuses unwitnessed, off-territory, and recursively nested commitments
+  ---
+  duration_ms: 12.580096
+  type: 'test'
+  ...
+# Subtest: reuses the exact section only for identical frozen carrier and observer coordinates
+ok 20 - reuses the exact section only for identical frozen carrier and observer coordinates
+  ---
+  duration_ms: 22.222737
+  type: 'test'
+  ...
+# Subtest: the MUD presentation carries only the canonical mission law locus and content address
+ok 21 - the MUD presentation carries only the canonical mission law locus and content address
+  ---
+  duration_ms: 0.51171
+  type: 'test'
+  ...
+# Subtest: a shallow-frozen family is reprojected when nested commitment polarity changes
+ok 22 - a shallow-frozen family is reprojected when nested commitment polarity changes
+  ---
+  duration_ms: 22.241336
+  type: 'test'
+  ...
+# Subtest: a shallow-frozen family is reprojected when nested witness evidence changes
+ok 23 - a shallow-frozen family is reprojected when nested witness evidence changes
+  ---
+  duration_ms: 17.241336
+  type: 'test'
+  ...
+# Subtest: cached families still reject newly invalid or off-territory nested commitments
+ok 24 - cached families still reject newly invalid or off-territory nested commitments
+  ---
+  duration_ms: 20.877331
+  type: 'test'
+  ...
+# Subtest: a frozen accessor family is compared by its currently admitted evidence
+ok 25 - a frozen accessor family is compared by its currently admitted evidence
+  ---
+  duration_ms: 20.172991
+  type: 'test'
+  ...
+# Subtest: canonical-equivalent observer and witness reorderings reuse the same projection
+ok 26 - canonical-equivalent observer and witness reorderings reuse the same projection
+  ---
+  duration_ms: 17.742761
+  type: 'test'
+  ...
+# Subtest: many admitted territories cannot permanently accumulate frozen projection cache entries
+ok 27 - many admitted territories cannot permanently accumulate frozen projection cache entries
+  ---
+  duration_ms: 2731.863921
+  type: 'test'
+  ...
+# Subtest: admitted notebook/library carriers project private, content-addressed L-space loci
+ok 28 - admitted notebook/library carriers project private, content-addressed L-space loci
+  ---
+  duration_ms: 4.92252
+  type: 'test'
+  ...
+# Subtest: a query move is restricted to a witnessed locus and unavailable with the exact provider obstruction
+ok 29 - a query move is restricted to a witnessed locus and unavailable with the exact provider obstruction
+  ---
+  duration_ms: 4.614676
+  type: 'test'
+  ...
+# Subtest: the existing provider path settles a citation-bound advisory receipt whose evidence joins FOUR
+ok 30 - the existing provider path settles a citation-bound advisory receipt whose evidence joins FOUR
+  ---
+  duration_ms: 17.662954
+  type: 'test'
+  ...
+# Subtest: citation references cannot escape the admitted source set
+ok 31 - citation references cannot escape the admitted source set
+  ---
+  duration_ms: 6.923547
+  type: 'test'
+  ...
+# Subtest: the adapter invokes the inference team's existing live-library path without emitting private provider locators
+ok 32 - the adapter invokes the inference team's existing live-library path without emitting private provider locators
+  ---
+  duration_ms: 7.248075
+  type: 'test'
+  ...
+# Subtest: managed profile is explicit or inferred while an empty unspecified model remains legacy
+ok 33 - managed profile is explicit or inferred while an empty unspecified model remains legacy
+  ---
+  duration_ms: 12.322164
+  type: 'test'
+  ...
+# Subtest: independently derived full history preserves governed Work, raw carrier and explicit receiving
+ok 34 - independently derived full history preserves governed Work, raw carrier and explicit receiving
+  ---
+  duration_ms: 18.766777
+  type: 'test'
+  ...
+# Subtest: provider submission remains Submitted with no inferred acceptance
+ok 35 - provider submission remains Submitted with no inferred acceptance
+  ---
+  duration_ms: 8.774356
+  type: 'test'
+  ...
+# Subtest: model snapshots detach source events and mutable carrier bytes
+ok 36 - model snapshots detach source events and mutable carrier bytes
+  ---
+  duration_ms: 4.40518
+  type: 'test'
+  ...
+# Subtest: managed history refuses legacy settlement in managed history
+ok 37 - managed history refuses legacy settlement in managed history
+  ---
+  duration_ms: 5.976038
+  type: 'test'
+  ...
+# Subtest: managed history refuses different profile
+ok 38 - managed history refuses different profile
+  ---
+  duration_ms: 1.855377
+  type: 'test'
+  ...
+# Subtest: managed history refuses different profile identity
+ok 39 - managed history refuses different profile identity
+  ---
+  duration_ms: 3.229659
+  type: 'test'
+  ...
+# Subtest: managed history refuses different chain
+ok 40 - managed history refuses different chain
+  ---
+  duration_ms: 2.223923
+  type: 'test'
+  ...
+# Subtest: managed history refuses different hub
+ok 41 - managed history refuses different hub
+  ---
+  duration_ms: 1.731039
+  type: 'test'
+  ...
+# Subtest: managed history refuses uppercase digest
+ok 42 - managed history refuses uppercase digest
+  ---
+  duration_ms: 1.410787
+  type: 'test'
+  ...
+# Subtest: managed history refuses noncanonical decimal sequence
+ok 43 - managed history refuses noncanonical decimal sequence
+  ---
+  duration_ms: 1.382584
+  type: 'test'
+  ...
+# Subtest: managed history refuses noncanonical decimal block
+ok 44 - managed history refuses noncanonical decimal block
+  ---
+  duration_ms: 1.30034
+  type: 'test'
+  ...
+# Subtest: native and semantic events must share their full adjacent occurrence
+ok 45 - native and semantic events must share their full adjacent occurrence
+  ---
+  duration_ms: 10.590253
+  type: 'test'
+  ...
+# Subtest: managed replay refuses missing admission, displaced resource, stale sequence and prior head
+ok 46 - managed replay refuses missing admission, displaced resource, stale sequence and prior head
+  ---
+  duration_ms: 5.07507
+  type: 'test'
+  ...
+# Subtest: carrier bytes, NI and carrier digest cannot be substituted independently
+ok 47 - carrier bytes, NI and carrier digest cannot be substituted independently
+  ---
+  duration_ms: 4.532382
+  type: 'test'
+  ...
+# Subtest: retirement blocks fresh selection while preserving the selected provider obligation
+ok 48 - retirement blocks fresh selection while preserving the selected provider obligation
+  ---
+  duration_ms: 10.808843
+  type: 'test'
+  ...
+# Subtest: restricted moves carry fixed native argument prefixes and the actual acting account
+ok 49 - restricted moves carry fixed native argument prefixes and the actual acting account
+  ---
+  duration_ms: 43.732561
+  type: 'test'
+  ...
+# Subtest: restricted action digest commits canonical returned bytes rather than NI text
+ok 50 - restricted action digest commits canonical returned bytes rather than NI text
+  ---
+  duration_ms: 12.987196
+  type: 'test'
+  ...
+# Subtest: v2 carrier admission preserves the original producer's exact canonical bytes and NI
+ok 51 - v2 carrier admission preserves the original producer's exact canonical bytes and NI
+  ---
+  duration_ms: 6.053595
+  type: 'test'
+  ...
+# Subtest: v2 carrier admission refuses wrong value, token and noncanonical supplied bytes
+ok 52 - v2 carrier admission refuses wrong value, token and noncanonical supplied bytes
+  ---
+  duration_ms: 1.560072
+  type: 'test'
+  ...
+# Subtest: provider completion evidence cannot settle managed Work before requester receiving
+ok 53 - provider completion evidence cannot settle managed Work before requester receiving
+  ---
+  duration_ms: 33.21712
+  type: 'test'
+  ...
+# Subtest: requester receiving plus the exact completion settles Work and ancestors while retaining denial
+ok 54 - requester receiving plus the exact completion settles Work and ancestors while retaining denial
+  ---
+  duration_ms: 59.607398
+  type: 'test'
+  ...
+# Subtest: a completed attempt for a different result stays evidence without settling received Work
+ok 55 - a completed attempt for a different result stays evidence without settling received Work
+  ---
+  duration_ms: 33.156318
+  type: 'test'
+  ...
+# Subtest: capability repair succeeds only after the exact submitted result is explicitly received
+ok 56 - capability repair succeeds only after the exact submitted result is explicitly received
+  ---
+  duration_ms: 46.552591
+  type: 'test'
+  ...
+# Subtest: one generic induction cannot silently choose among distinct governed Demand handles
+ok 57 - one generic induction cannot silently choose among distinct governed Demand handles
+  ---
+  duration_ms: 133.905241
+  type: 'test'
+  ...
+# Subtest: exact candidate-bound receipt pair enables one restricted action without changing its identity
+ok 58 - exact candidate-bound receipt pair enables one restricted action without changing its identity
+  ---
+  duration_ms: 48.013888
+  type: 'test'
+  ...
+# Subtest: receipt pair refuses different account, chain, hub, action, ability, digest and full nb
+ok 59 - receipt pair refuses different account, chain, hub, action, ability, digest and full nb
+  ---
+  duration_ms: 191.153028
+  type: 'test'
+  ...
+# Subtest: equal arbitrary capability tokens or altered canonical receipt IDs cannot authorize
+ok 60 - equal arbitrary capability tokens or altered canonical receipt IDs cannot authorize
+  ---
+  duration_ms: 72.549437
+  type: 'test'
+  ...
+# Subtest: previously bound readiness cannot authorize a later history checkpoint
+ok 61 - previously bound readiness cannot authorize a later history checkpoint
+  ---
+  duration_ms: 37.089787
+  type: 'test'
+  ...
+# Subtest: one admitted work carrier gives a chain demand an endeavor/project/milestone/duty descent
+ok 62 - one admitted work carrier gives a chain demand an endeavor/project/milestone/duty descent
+  ---
+  duration_ms: 4.614115
+  type: 'test'
+  ...
+# Subtest: only an office-qualified cohort member can offer a work demand
+ok 63 - only an office-qualified cohort member can offer a work demand
+  ---
+  duration_ms: 8.741366
+  type: 'test'
+  ...
+# Subtest: a negative provider assignment is retained as a canonical cultivation demand, while later completion settles the milestone
+ok 64 - a negative provider assignment is retained as a canonical cultivation demand, while later completion settles the milestone
+  ---
+  duration_ms: 5.252958
+  type: 'test'
+  ...
+# Subtest: malformed work hierarchy cannot be admitted as a demand carrier
+ok 65 - malformed work hierarchy cannot be admitted as a demand carrier
+  ---
+  duration_ms: 0.174493
+  type: 'test'
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4263.600649
