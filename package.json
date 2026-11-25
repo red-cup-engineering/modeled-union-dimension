@@ -23,6 +23,7 @@
     "@red-cup-engineering/computer-code-engine": "^0.1.0",
     "@red-cup-engineering/computer-data-engineering-services-section": "^0.7.4",
     "@red-cup-engineering/metrologic": "^0.22.8",
+    "@red-cup-engineering/semiotic-content-address-system": "0.1.9",
     "@red-cup-engineering/uri-engineering-services-section": "^0.1.7"
   },
   "devDependencies": {

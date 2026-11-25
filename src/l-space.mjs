@@ -1,13 +1,13 @@
-import { createHash } from "node:crypto";
+import { sha256Hex, isNiUri } from "@red-cup-engineering/semiotic-content-address-system";
 import { readingOfSides } from "@red-cup-engineering/metrologic/four";
-import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
+
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 
 const SHA = /^sha256:[a-f0-9]{64}$/u;
 export const NOTEBOOK_PROVIDER = "urn:ame:notebooklm-inference-team";
 
 function identify(value) { return identifyJsonSemanticContent({ objectKind: `modeled-union-dimension.${value?.type ?? "material"}`, value, witnessRoot: EMPTY_WITNESS_ROOT }).token; }
-function digest(value) { return `sha256:${createHash("sha256").update(value).digest("hex")}`; }
+function digest(value) { return `sha256:${sha256Hex(value)}`; }
 function required(value, label) { if (typeof value !== "string" || value.length === 0) throw new TypeError(`${label} must be a non-empty string`); return value; }
 function exactNi(value, label) { if (!isNiUri(value)) throw new TypeError(`${label} must be a canonical SHA-256 ni identifier`); return value; }
 function freeze(value) { if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value; for (const child of Object.values(value)) freeze(child); return Object.freeze(value); }

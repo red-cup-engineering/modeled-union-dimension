@@ -1,5 +1,5 @@
 import { readingOfSides } from "@red-cup-engineering/metrologic/four";
-import { isNiUri, makeNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
+import { isNiUri, makeNiUri } from "@red-cup-engineering/semiotic-content-address-system";
 import { EMPTY_WITNESS_ROOT, admitJsonSemanticContent, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 import { projectTerritoryFoam } from "./foam-field.mjs";
 import { projectLSpace } from "./l-space.mjs";

@@ -1,4 +1,4 @@
-import { isNiUri } from "@red-cup-engineering/uri-engineering-services-section/ni-uri";
+import { isNiUri } from "@red-cup-engineering/semiotic-content-address-system";
 import { EMPTY_WITNESS_ROOT, identifyJsonSemanticContent } from "@red-cup-engineering/computer-code-engine/semiotic-expression-notation/semantic-content-identity";
 
 const SHA = /^sha256:[a-f0-9]{64}$/u;
