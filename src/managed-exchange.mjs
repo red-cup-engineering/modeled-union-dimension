@@ -31,7 +31,7 @@ export function exactManagedAccount(value, label = "actor") {
   if (!ACCOUNT.test(value ?? "") || value === `0x${"00".repeat(20)}`) throw new TypeError(`${label} must be a nonzero lowercase EVM account`);
   return value;
 }
-function digest(value, label, nonzero = false) {
+function assertBytes32(value, label, nonzero = false) {
   if (!DIGEST.test(value ?? "") || nonzero && value === ZERO) throw new TypeError(`${label} must be a canonical${nonzero ? " nonzero" : ""} bytes32`);
   return value;
 }
@@ -45,7 +45,7 @@ function same(actual, expected, label) {
 function position(value, label) {
   if (!value || typeof value !== "object") throw new TypeError(`${label} is required`);
   decimal(value.blockNumber, `${label}.blockNumber`);
-  digest(value.blockHash, `${label}.blockHash`, true); digest(value.transactionHash, `${label}.transactionHash`, true);
+  assertBytes32(value.blockHash, `${label}.blockHash`, true); assertBytes32(value.transactionHash, `${label}.transactionHash`, true);
   for (const field of ["transactionIndex", "logIndex"]) if (!Number.isSafeInteger(value[field]) || value[field] < 0) throw new TypeError(`${label}.${field} must be a nonnegative safe integer`);
 }
 function earlier(left, right) {
@@ -89,10 +89,10 @@ export function replayManagedExchange(events, { chainId, exchange }) {
     const previous = ordered[index - 1]?.chainPosition;
     if (previous?.blockNumber === at.blockNumber && previous.transactionIndex > at.transactionIndex) throw new Error("managed transaction order is inconsistent");
     blocks.set(at.blockNumber, at.blockHash); transactions.set(occurrence, at.transactionHash); transactionOccurrences.set(at.transactionHash, occurrence);
-    for (const field of ["cell", "demand", "offer", "law", "wantedLaw", "grounding", "result", "receipt"]) if (event[field] !== undefined) digest(event[field], field, true);
+    for (const field of ["cell", "demand", "offer", "law", "wantedLaw", "grounding", "result", "receipt"]) if (event[field] !== undefined) assertBytes32(event[field], field, true);
     for (const field of ["controller", "raiser"]) if (event[field] !== undefined) exactManagedAccount(event[field], field);
     if (CARRIERS.has(event.kind)) {
-      digest(event.carrierId, "carrierId", true); same(niDigestHex(event.carrierNi), event.carrierId, "carrier identity");
+      assertBytes32(event.carrierId, "carrierId", true); same(niDigestHex(event.carrierNi), event.carrierId, "carrier identity");
       if (event.carrier !== undefined) {
         if (!(event.carrier instanceof Uint8Array) || event.carrier.length === 0) throw new TypeError("managed carrier must be nonempty bytes");
         same(makeNiUri(event.carrier), event.carrierNi, "carrier bytes");
@@ -110,8 +110,8 @@ export function replayManagedExchange(events, { chainId, exchange }) {
     delete event.carrier;
     const state = event.resourceState;
     if (!state || typeof state !== "object") throw new TypeError("managed event requires its paired native resourceState");
-    for (const field of ["resource", "kind", "content", "evidence"]) digest(state[field], `resourceState.${field}`, true);
-    digest(state.priorContent, "resourceState.priorContent"); exactManagedAccount(state.controller, "resourceState.controller");
+    for (const field of ["resource", "kind", "content", "evidence"]) assertBytes32(state[field], `resourceState.${field}`, true);
+    assertBytes32(state.priorContent, "resourceState.priorContent"); exactManagedAccount(state.controller, "resourceState.controller");
     decimal(state.sequence, "resourceState.sequence", (1n << 64n) - 1n); decimal(state.priorSequence, "resourceState.priorSequence", (1n << 64n) - 1n);
     const isCell = event.kind === "CellSeated" || event.kind === "CellRetired", isOffer = event.kind === "DemandOffered";
     same(state.resource, isCell ? event.cell : isOffer ? event.offer : event.demand, "semantic/native resource");
@@ -128,7 +128,7 @@ export function replayManagedExchange(events, { chainId, exchange }) {
       same(BigInt(state.sequence), BigInt(prior.sequence) + 1n, "next sequence");
     }
     if (event.kind === "CellSeated") {
-      digest(event.law, "Cell law", true); exactManagedAccount(event.controller, "Cell controller"); same(state.controller, event.controller, "Cell owner");
+      assertBytes32(event.law, "Cell law", true); exactManagedAccount(event.controller, "Cell controller"); same(state.controller, event.controller, "Cell owner");
       cells.push({ type: "SemioticCellLocus", profile: MARSH_EXCHANGE_PROFILE, id: event.cell, carrierId: event.carrierId, controller: event.controller, law: event.law, seated: event, retired: null, resourceState: state });
     } else if (event.kind === "CellRetired") {
       const cell = cells.find(({ id }) => id === event.cell);
@@ -136,7 +136,7 @@ export function replayManagedExchange(events, { chainId, exchange }) {
       same(event.controller, cell.controller, "retirement actor"); cell.retired = event; cell.resourceState = state;
       relations.push(relation("retires", `event:${managedEventKey(event)}`, `cell:${cell.id}`, event));
     } else if (event.kind === "DemandRaised") {
-      digest(event.grounding, "Demand grounding", true); digest(event.wantedLaw, "Demand wanted law", true); exactManagedAccount(event.raiser, "Demand raiser"); same(state.controller, event.raiser, "Demand owner");
+      assertBytes32(event.grounding, "Demand grounding", true); assertBytes32(event.wantedLaw, "Demand wanted law", true); exactManagedAccount(event.raiser, "Demand raiser"); same(state.controller, event.raiser, "Demand owner");
       demands.push({ type: "SemioticDemandLocus", profile: MARSH_EXCHANGE_PROFILE, id: event.demand, carrierId: event.carrierId, raiser: event.raiser, wantedLaw: event.wantedLaw, grounding: event.grounding, phase: "Open", raised: event, purchase: null, submission: null, receiving: null, resourceState: state });
     } else if (event.kind === "DemandOffered") {
       const demand = demands.find(({ id }) => id === event.demand), cell = cells.find(({ id }) => id === event.cell);
